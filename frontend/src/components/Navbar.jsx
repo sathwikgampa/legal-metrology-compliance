@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Scale, Plus, Search, Bell, ChevronDown, AlertCircle } from 'lucide-react';
+import { Scale, Plus, Search, Moon, Sun, ChevronDown } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import { setSimulateNetworkError, getSimulateNetworkError } from '../services/api';
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [errorSimulated, setErrorSimulated] = useState(getSimulateNetworkError());
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -61,10 +63,18 @@ export default function Navbar() {
           </label>
         </div>
 
-        {/* Notifications Icon Button */}
-        <button className="nav-icon-btn" title="Statutory Alerts & Notifications" aria-label="Notifications">
-          <Bell size={18} />
-          <span className="notification-dot" />
+        {/* Sleek Theme Toggle: immediately left of Inspector S. Sharma */}
+        <button
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        >
+          {isDarkMode ? (
+            <Sun size={17} className="theme-toggle-icon sun-icon" />
+          ) : (
+            <Moon size={17} className="theme-toggle-icon moon-icon" />
+          )}
         </button>
 
         {/* User Profile Info */}
