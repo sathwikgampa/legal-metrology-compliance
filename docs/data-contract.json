@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Legal Metrology Compliance System Data Contract",
+  "description": "Interface definitions for OCR output, extracted product profiles, and compliance engine evaluation results.",
+  "core_principles": {
+    "uncertainty_handling": "Not detected must NOT automatically mean not present. OCR uncertainty should result in NEEDS_REVIEW or POTENTIAL_VIOLATION depending on the evidence.",
+    "status_enum": ["COMPLIANT", "POTENTIAL_VIOLATION", "NEEDS_REVIEW"]
+  },
+  "definitions": {
+    "OCRResult": {
+      "type": "object",
+      "properties": {
+        "product_id": { "type": "string", "example": "TEST001" },
+        "extracted_text": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string", "example": "MRP ₹120" },
+              "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.96 },
+              "bbox": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "minItems": 4,
+                "maxItems": 4,
+                "example": [100, 250, 400, 300]
+              }
+            },
+            "required": ["text", "confidence", "bbox"]
+          }
+        }
+      },
+      "required": ["product_id", "extracted_text"]
+    },
+    "ProductProfile": {
+      "type": "object",
+      "properties": {
+        "product_name": { "type": "string", "default": "" },
+        "manufacturer": { "type": "string", "default": "" },
+        "packer": { "type": "string", "default": "" },
+        "importer": { "type": "string", "default": "" },
+        "net_quantity": { "type": "string", "default": "" },
+        "mrp": { "type": "string", "default": "" },
+        "date": { "type": "string", "default": "" },
+        "consumer_care": { "type": "string", "default": "" },
+        "country_of_origin": { "type": "string", "default": "" },
+        "other_declarations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        }
+      },
+      "required": [
+        "product_name",
+        "manufacturer",
+        "packer",
+        "importer",
+        "net_quantity",
+        "mrp",
+        "date",
+        "consumer_care",
+        "country_of_origin",
+        "other_declarations"
+      ]
+    },
+    "Violation": {
+      "type": "object",
+      "properties": {
+        "field": { "type": "string", "example": "consumer_care" },
+        "issue": { "type": "string", "example": "Consumer care details missing from packaging" },
+        "severity": { "type": "string", "enum": ["HIGH", "MEDIUM", "LOW"], "example": "HIGH" },
+        "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.95 },
+        "rule_reference": { "type": "string", "example": "Rule 6(1)(ac) - Consumer Care Details" }
+      },
+      "required": ["field", "issue", "severity", "confidence", "rule_reference"]
+    },
+    "ComplianceResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["COMPLIANT", "POTENTIAL_VIOLATION", "NEEDS_REVIEW"],
+          "example": "NEEDS_REVIEW"
+        },
+        "confidence": { "type": "number", "minimum": 0.0, "maximum": 1.0, "example": 0.85 },
+        "violations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Violation" }
+        }
+      },
+      "required": ["status", "confidence", "violations"]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "required_declarations": [
+    "product_name",
+    "manufacturer",
+    "net_quantity",
+    "mrp",
+    "date",
+    "consumer_care"
+  ]
+}
