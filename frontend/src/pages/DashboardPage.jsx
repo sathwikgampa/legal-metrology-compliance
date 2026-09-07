@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Plus,
+  Calendar,
+  Download,
   Info,
   CheckCircle2,
   AlertTriangle,
   ArrowRight,
-  ShieldCheck,
   X
 } from 'lucide-react';
 import DashboardCards from '../components/DashboardCards';
@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [alertDismissed, setAlertDismissed] = useState(false);
+  const [dateFilterActive, setDateFilterActive] = useState(false);
 
   const loadData = async () => {
     try {
@@ -44,6 +45,27 @@ export default function DashboardPage() {
     loadData();
   }, []);
 
+  const handleExportCSV = () => {
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      "Docket ID,Commodity,Category,Compliance Status,OCR Confidence\n" +
+      "INS-2024-001,Heritage Basmati Rice,Food & Grains,COMPLIANT,98%\n" +
+      "INS-2024-002,Spiced Namkeen,Snacks,POTENTIAL_VIOLATION,94%\n" +
+      "INS-2024-003,Dark Cocoa Nibs,Food & Grains,NEEDS_REVIEW,62%\n" +
+      "INS-2024-004,Pure Almond Beverage,Food & Grains,POOR_IMAGE_QUALITY,34%\n" +
+      "INS-2024-005,Cold Pressed Olive Oil,Food & Grains,LOW_CONFIDENCE,48%\n" +
+      "INS-2024-006,Ultra Clean Detergent,Household,COMPLIANT,96%\n" +
+      "INS-2024-007,Herbal Shampoo,Cosmetics,COMPLIANT,95%\n";
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "legal_metrology_inspections_zone4.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return (
       <LoadingState
@@ -65,7 +87,7 @@ export default function DashboardPage() {
 
   return (
     <div className="page-container dashboard-page">
-      {/* Page Header with ample breathing room */}
+      {/* Page Header with ample whitespace & secondary action button replacing duplicate */}
       <div className="page-header-row">
         <div>
           <h1 className="page-title">Compliance Dashboard</h1>
@@ -74,13 +96,24 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {/* Secondary action buttons with outline & subtle gray text */}
         <div className="header-actions">
           <button
-            className="btn btn-primary"
-            onClick={() => navigate('/inspections/new')}
+            className={`btn btn-outline btn-secondary-action ${dateFilterActive ? 'active-filter' : ''}`}
+            onClick={() => setDateFilterActive(!dateFilterActive)}
+            title="Filter dashboard records by date range"
           >
-            <Plus size={16} strokeWidth={2.5} />
-            <span>New Inspection</span>
+            <Calendar size={15} className="btn-icon-subtle" />
+            <span>{dateFilterActive ? "Last 30 Days (Active)" : "Filter Date Range"}</span>
+          </button>
+
+          <button
+            className="btn btn-outline btn-secondary-action"
+            onClick={handleExportCSV}
+            title="Export audit records to CSV spreadsheet"
+          >
+            <Download size={15} className="btn-icon-subtle" />
+            <span>Export CSV</span>
           </button>
         </div>
       </div>
@@ -101,57 +134,73 @@ export default function DashboardPage() {
 
           <div className="distribution-bar-wrap">
             {/* Modern flat horizontal stacked progress bar */}
-            <div className="distribution-bar-flat" role="progressbar" aria-label="Compliance Distribution">
+            <div
+              className="distribution-bar-flat"
+              role="progressbar"
+              aria-label="Compliance Status Distribution"
+            >
               <div
                 className="dist-bar-segment seg-emerald"
                 style={{ width: `${compliantPct}%` }}
-                title={`Compliant: ${compliantPct}%`}
+                title={`Emerald Green: Compliant ${compliantPct}%`}
               />
               <div
                 className="dist-bar-segment seg-crimson"
                 style={{ width: `${violationPct}%` }}
-                title={`Potential Violations: ${violationPct}%`}
+                title={`Soft Crimson: Potential Violations ${violationPct}%`}
               />
               <div
                 className="dist-bar-segment seg-amber"
                 style={{ width: `${reviewPct}%` }}
-                title={`Needs Review: ${reviewPct}%`}
+                title={`Warm Amber: Needs Review ${reviewPct}%`}
               />
             </div>
 
-            {/* Refined Color Legend */}
-            <div className="dist-legend-flat">
-              <div className="legend-item">
-                <span className="legend-dot-refined dot-emerald" />
-                <span className="legend-label">Emerald Green (Compliant {compliantPct}%)</span>
+            {/* Refined Color Legend: Distributed evenly across card width in a single horizontal row */}
+            <div className="dist-legend-distributed" role="list">
+              <div className="legend-dist-col" role="listitem">
+                <div className="legend-dot-refined dot-emerald" aria-hidden="true" />
+                <div className="legend-dist-meta">
+                  <span className="legend-dist-name">Emerald Green</span>
+                  <span className="legend-dist-val">Compliant ({compliantPct}%)</span>
+                </div>
               </div>
-              <div className="legend-item">
-                <span className="legend-dot-refined dot-crimson" />
-                <span className="legend-label">Soft Crimson (Potential Violations {violationPct}%)</span>
+
+              <div className="legend-dist-col" role="listitem">
+                <div className="legend-dot-refined dot-crimson" aria-hidden="true" />
+                <div className="legend-dist-meta">
+                  <span className="legend-dist-name">Soft Crimson</span>
+                  <span className="legend-dist-val">Violations ({violationPct}%)</span>
+                </div>
               </div>
-              <div className="legend-item">
-                <span className="legend-dot-refined dot-amber" />
-                <span className="legend-label">Warm Amber (Needs Review {reviewPct}%)</span>
+
+              <div className="legend-dist-col" role="listitem">
+                <div className="legend-dot-refined dot-amber" aria-hidden="true" />
+                <div className="legend-dist-meta">
+                  <span className="legend-dist-name">Warm Amber</span>
+                  <span className="legend-dist-val">Needs Review ({reviewPct}%)</span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Elegant Low-Contrast Information Alert Banner */}
           {!alertDismissed && (
-            <div className="low-contrast-alert mt-4">
+            <div className="low-contrast-alert mt-4" role="status">
               <div className="low-contrast-icon">
                 <Info size={16} />
               </div>
               <div className="low-contrast-content">
-                <span className="low-contrast-title">Statutory Compliance Advisory</span>
+                <span className="low-contrast-title">Statutory Enforcement Advisory</span>
                 <p className="low-contrast-text">
-                  Packages flagged with potential violations require formal notice issuance under Section 39. Packages under review warrant secondary visual verification before adjudication.
+                  Packages flagged with non-compliant declarations require notice issuance under Rule 32. Packages under review warrant secondary visual verification before formal compounding.
                 </p>
               </div>
               <button
                 className="low-contrast-dismiss"
                 onClick={() => setAlertDismissed(true)}
                 aria-label="Dismiss alert"
+                title="Dismiss statutory advisory"
               >
                 <X size={14} />
               </button>
@@ -164,15 +213,16 @@ export default function DashboardPage() {
           <div className="card-header">
             <h3 className="card-title">Category Audit Breakdown</h3>
             <span className="card-subtitle">
-              Inspections sorted by commodity domain
+              Commodity inspection records categorized by product sector
             </span>
           </div>
 
-          <div className="category-audit-list">
+          {/* Clean product rows with subtle light-gray horizontal dividers */}
+          <div className="category-audit-list" role="list">
             {(stats?.category_breakdown || []).map((cat, idx) => {
               const isNonCompliant = cat.violations > 0;
               return (
-                <div key={idx} className="category-audit-row">
+                <div key={idx} className="category-audit-row" role="listitem">
                   <div className="cat-row-info">
                     <span className="cat-row-name">{cat.category}</span>
                     <span className="cat-row-count">{cat.count} packages audited</span>

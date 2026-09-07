@@ -581,9 +581,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
   gap: 0.5rem;
   padding: 0.55rem 1.1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 600;
@@ -591,6 +593,12 @@ body {
   transition: all 0.15s ease;
   text-decoration: none;
   border: 1px solid transparent;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .btn-primary {
@@ -614,6 +622,43 @@ body {
   background-color: var(--accent-soft);
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Secondary Action Button with subtle gray outline & text */
+.btn-secondary-action {
+  background-color: var(--paper-raised);
+  border: 1px solid #D1D5DB;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.48rem 0.9rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.btn-secondary-action:hover {
+  background-color: #F8FAFC;
+  border-color: #94A3B8;
+  color: var(--ink);
+}
+
+.btn-secondary-action.active-filter {
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-icon-subtle {
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.btn-secondary-action:hover .btn-icon-subtle {
+  color: var(--ink-soft);
 }
 
 .btn-outline-danger {
@@ -702,7 +747,7 @@ body {
   background-color: var(--paper-raised);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 1.35rem 1.4rem;
+  padding: 1.6rem 1.6rem 1.85rem 1.6rem;
   display: flex;
   flex-direction: column;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
@@ -1077,29 +1122,68 @@ body {
 .seg-crimson { background-color: #EF4444; }
 .seg-amber { background-color: #F59E0B; }
 
-.dist-legend-flat {
-  display: flex;
-  flex-wrap: wrap;
+/* Refined Color Legend: Align the three colored status text blocks horizontally in a single row, distributing them evenly across the width of the card */
+.dist-legend-distributed {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
   gap: 1.25rem;
-  font-size: 0.78rem;
-  color: var(--ink-soft);
+  padding: 0.75rem 0.25rem 0.25rem 0.25rem;
+  align-items: center;
+}
+
+.legend-dist-col {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .legend-dot-refined {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  display: inline-block;
+  flex-shrink: 0;
 }
 
-.dot-emerald { background-color: #10B981; }
-.dot-crimson { background-color: #EF4444; }
-.dot-amber { background-color: #F59E0B; }
+/* Ensure progress bar segments and legend dots match 100% identically */
+.seg-emerald, .dot-emerald {
+  background-color: #10B981;
+}
+.dot-emerald {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
 
-.legend-label {
-  font-weight: 500;
+.seg-crimson, .dot-crimson {
+  background-color: #EF4444;
+}
+.dot-crimson {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+.seg-amber, .dot-amber {
+  background-color: #F59E0B;
+}
+.dot-amber {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+}
+
+.legend-dist-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.legend-dist-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.1px;
+}
+
+.legend-dist-val {
+  font-size: 0.73rem;
   color: var(--ink-soft);
-  font-size: 0.75rem;
+  margin-top: 1px;
 }
 
 /* Elegant, low-contrast information alert banner */
@@ -1159,17 +1243,28 @@ body {
   flex-direction: column;
 }
 
+/* Product row with subtle, light-gray horizontal divider line between each row */
 .category-audit-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.85rem 0.25rem;
-  border-bottom: 1px solid var(--line);
+  padding: 0.95rem 0.35rem;
+  border-bottom: 1px solid #E5E7EB; /* Subtle, light-gray horizontal divider line */
   transition: background-color 0.15s ease;
+}
+
+.category-audit-row:first-child {
+  padding-top: 0.45rem;
 }
 
 .category-audit-row:last-child {
   border-bottom: none;
+  padding-bottom: 0.45rem;
+}
+
+.category-audit-row:hover {
+  background-color: var(--paper);
+  border-radius: 4px;
 }
 
 .cat-row-info {
