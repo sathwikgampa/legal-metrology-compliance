@@ -1,68 +1,82 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import ComplianceStatus from './ComplianceStatus';
+import ConfidenceBadge from './ConfidenceBadge';
 
-export default function InspectionTable({ inspections }) {
-  const items = inspections || [];
+export default function InspectionTable({ inspections = [], emptyMessage = "No inspections recorded yet." }) {
+  if (!inspections || inspections.length === 0) {
+    return (
+      <div className="table-empty-box">
+        <p>{emptyMessage}</p>
+      </div>
+    );
+  }
 
-  const renderBadge = (status) => {
-    switch (status) {
-      case "COMPLIANT":
-        return <span className="badge badge-compliant">🟢 COMPLIANT</span>;
-      case "POTENTIAL_VIOLATION":
-        return <span className="badge badge-violation">🔴 POTENTIAL VIOLATION</span>;
-      case "NEEDS_REVIEW":
-      default:
-        return <span className="badge badge-review">🟡 NEEDS REVIEW</span>;
+  const renderOfficerDecision = (decision) => {
+    const val = (decision || "PENDING").toUpperCase();
+    if (val === "APPROVED" || val === "CONFIRMED") {
+      return <span className="decision-tag decision-approved">Approved</span>;
     }
+    if (val === "REJECTED") {
+      return <span className="decision-tag decision-rejected">Notice Issued</span>;
+    }
+    if (val === "FURTHER_INSPECTION") {
+      return <span className="decision-tag decision-further">Further Inspection</span>;
+    }
+    return <span className="decision-tag decision-pending">Pending Review</span>;
   };
 
   return (
-    <div className="table-card">
-      <div className="table-header">
-        <h2>Recent Inspection Audits</h2>
-        <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          Total items: {items.length}
-        </span>
-      </div>
-
-      <table className="custom-table">
+    <div className="table-responsive">
+      <table className="data-table">
         <thead>
           <tr>
             <th>Inspection ID</th>
-            <th>Product Name</th>
+            <th>Commodity / Product</th>
+            <th>Category</th>
             <th>Compliance Status</th>
             <th>Confidence</th>
-            <th>Officer Decision</th>
-            <th>Timestamp</th>
+            <th>Officer Sign-off</th>
+            <th>Audit Date</th>
+            <th className="text-right">Action</th>
           </tr>
         </thead>
         <tbody>
-          {items.length === 0 ? (
-            <tr>
-              <td colSpan="6" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
-                No inspection records found. Click "New Inspection" to analyze packaging.
+          {inspections.map((item) => (
+            <tr key={item.id} className="table-row-hover">
+              <td className="font-mono text-bold">
+                <Link to={`/inspections/${item.id}`} className="link-table-id">
+                  {item.id}
+                </Link>
+              </td>
+              <td>
+                <div className="product-cell-name">{item.product_name}</div>
+                {item.images_count && (
+                  <span className="product-cell-sub">📷 {item.images_count} image(s)</span>
+                )}
+              </td>
+              <td>
+                <span className="category-pill">{item.category}</span>
+              </td>
+              <td>
+                <ComplianceStatus status={item.status} size="sm" />
+              </td>
+              <td>
+                <ConfidenceBadge value={item.confidence} size="sm" showLabel={false} />
+              </td>
+              <td>
+                {renderOfficerDecision(item.officer_decision)}
+              </td>
+              <td className="text-muted text-sm">
+                {item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Recent'}
+              </td>
+              <td className="text-right">
+                <Link to={`/inspections/${item.id}`} className="btn btn-outline btn-xs">
+                  View Audit →
+                </Link>
               </td>
             </tr>
-          ) : (
-            items.map((item) => (
-              <tr key={item.id}>
-                <td style={{ fontFamily: 'monospace', fontWeight: 600 }}>{item.id}</td>
-                <td>{item.product_name}</td>
-                <td>{renderBadge(item.status)}</td>
-                <td>{((item.confidence || 0) * 100).toFixed(0)}%</td>
-                <td>
-                  <span style={{ 
-                    fontWeight: 600, 
-                    color: item.officer_decision === 'APPROVED' ? '#4ade80' : (item.officer_decision === 'REJECTED' ? '#f87171' : '#facc15') 
-                  }}>
-                    {item.officer_decision || 'PENDING'}
-                  </span>
-                </td>
-                <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  {item.created_at ? new Date(item.created_at).toLocaleString() : 'Just now'}
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>
