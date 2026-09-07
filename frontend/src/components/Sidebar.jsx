@@ -1,9 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  FilePlus2,
+  History,
+  FlaskConical,
+  Settings,
+  ShieldCheck
+} from 'lucide-react';
 
 export default function Sidebar() {
   return (
     <aside className="app-sidebar" aria-label="Main Navigation">
+      {/* Primary Navigation */}
       <div className="sidebar-section">
         <span className="sidebar-heading">Navigation</span>
         <nav className="sidebar-nav">
@@ -12,7 +21,7 @@ export default function Sidebar() {
             end
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">📊</span>
+            <LayoutDashboard size={17} className="sidebar-nav-icon" />
             <span>Dashboard</span>
           </NavLink>
 
@@ -20,7 +29,7 @@ export default function Sidebar() {
             to="/inspections/new"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">📸</span>
+            <FilePlus2 size={17} className="sidebar-nav-icon" />
             <span>New Inspection</span>
           </NavLink>
 
@@ -28,14 +37,21 @@ export default function Sidebar() {
             to="/history"
             className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">📜</span>
+            <History size={17} className="sidebar-nav-icon" />
             <span>Inspection History</span>
           </NavLink>
         </nav>
       </div>
 
+      {/* Elegant Hairline Divider separating main navigation from test scenarios */}
+      <div className="sidebar-divider" role="separator" />
+
+      {/* Test Scenarios Section */}
       <div className="sidebar-section">
-        <span className="sidebar-heading">Test Scenarios (Mock Cases)</span>
+        <div className="sidebar-section-header">
+          <FlaskConical size={14} className="sidebar-section-icon" />
+          <span className="sidebar-heading">Test Scenarios</span>
+        </div>
         <div className="scenario-links-list">
           <NavLink to="/inspections/INS-2024-001" className="scenario-item">
             <span className="scenario-dot dot-compliant" />
@@ -68,13 +84,20 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Sidebar Footer & System Status */}
       <div className="sidebar-footer">
-        <div className="system-status-indicator">
-          <span className="status-pulse" />
-          <span>Local Engine: Mock v1.0</span>
+        <div className="sidebar-settings-link">
+          <Settings size={16} className="sidebar-settings-icon" />
+          <span>Rules & Thresholds</span>
         </div>
+
+        <div className="system-status-indicator mt-3">
+          <ShieldCheck size={14} className="status-shield-icon" />
+          <span>Engine: Active (Rules 2011)</span>
+        </div>
+
         <p className="sidebar-disclaimer">
-          Inspection Assistant Mode. Final judgment rests with the Officer.
+          Statutory inspection assistant. Officer determination is legally binding.
         </p>
       </div>
     </aside>
