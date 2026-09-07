@@ -24,76 +24,76 @@ export default function Navbar() {
   };
 
   return (
-    <header className="app-navbar" role="banner">
-      <div className="navbar-left">
-        <Link to="/" className="navbar-brand">
-          <div className="brand-badge-box">
-            <Scale className="brand-icon-svg" size={20} />
-          </div>
-          <div className="brand-text-block">
-            <span className="brand-title">Legal Metrology Inspection System</span>
-            <span className="brand-sub">Department of Consumer Affairs • Packaged Commodities (2011)</span>
-          </div>
-        </Link>
-      </div>
+    <header className="bg-white border-b border-slate-200 h-16 min-h-16 px-6 flex items-center justify-between dark:bg-slate-900 dark:border-slate-800 transition-colors">
+      {/* Left: Logo & Title */}
+      <Link to="/" className="flex items-center space-x-3 group text-inherit no-underline">
+        <div className="text-blue-600 dark:text-blue-400 text-xl font-bold transition-transform group-hover:scale-105">⚖️</div>
+        <div>
+          <h1 className="text-sm font-bold tracking-tight text-slate-800 dark:text-slate-100">
+            Legal Metrology Inspection System
+          </h1>
+          <p className="text-[10px] text-slate-400">Department of Consumer Affairs • Packaged Commodities (2011)</p>
+        </div>
+      </Link>
 
-      <div className="navbar-center">
-        <form className="navbar-search-form" onSubmit={handleSearchSubmit}>
-          <Search size={15} className="navbar-search-icon" />
+      {/* Center: Search Bar */}
+      <div className="w-96 max-w-xs sm:max-w-md mx-4">
+        <form onSubmit={handleSearchSubmit} className="relative w-full">
           <input
             type="text"
-            className="navbar-search-input"
             placeholder="Search inspections, dockets, brands..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:border-blue-500 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 placeholder-slate-400 transition-colors"
           />
         </form>
       </div>
 
-      <div className="navbar-right">
-        {/* Testing switch for simulated network errors */}
-        <div className="sim-toggle-block" title="Toggle simulated network failure to verify ErrorState component">
-          <label className="sim-toggle-label">
-            <input
-              type="checkbox"
-              checked={errorSimulated}
-              onChange={handleToggleError}
-            />
-            <span className="sim-text">Simulate API Failure</span>
-          </label>
-        </div>
+      {/* Right: Quick Controls, Dark Mode Switch, Profile */}
+      <div className="flex items-center space-x-4">
+        <label className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={errorSimulated}
+            onChange={handleToggleError}
+            className="rounded border-slate-300 accent-blue-600 cursor-pointer"
+          />
+          <span className="hidden sm:inline">Simulate API Failure</span>
+        </label>
 
-        {/* Sleek Theme Toggle: immediately left of Inspector S. Sharma */}
+        {/* Clean Dark Mode Toggle Switch Button */}
         <button
-          className="theme-toggle-btn"
+          type="button"
           onClick={toggleTheme}
+          className="p-1.5 border border-slate-200 rounded-md hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer transition-colors"
           title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label="Toggle Theme"
         >
-          {isDarkMode ? (
-            <Sun size={17} className="theme-toggle-icon sun-icon" />
-          ) : (
-            <Moon size={17} className="theme-toggle-icon moon-icon" />
-          )}
+          <span id="theme-icon" className="text-xs leading-none select-none">
+            {isDarkMode ? '☀️' : '🌙'}
+          </span>
         </button>
 
-        {/* User Profile Info */}
-        <div className="officer-profile-badge">
-          <div className="officer-avatar" aria-hidden="true">SS</div>
-          <div className="officer-info">
-            <span className="officer-name">Inspector S. Sharma</span>
-            <span className="officer-role">Zone 4 • Enforcement</span>
+        {/* Profile Card */}
+        <div className="flex items-center space-x-2 border-l border-slate-200 pl-4 dark:border-slate-700">
+          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs dark:bg-blue-900/50 dark:text-blue-300 select-none">
+            SS
           </div>
-          <ChevronDown size={14} className="officer-dropdown-caret" />
+          <div className="hidden md:block">
+            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 leading-tight">
+              Inspector S. Sharma
+            </div>
+            <div className="text-[10px] text-slate-400">Zone 4 • Enforcement</div>
+          </div>
         </div>
 
-        {/* High-priority "+ New Inspection" Action Button */}
+        {/* Main Action Button */}
         <button
-          className="btn btn-primary btn-navbar-action"
+          type="button"
           onClick={() => navigate('/inspections/new')}
+          className="bg-blue-600 text-white font-medium text-xs px-3 py-2 rounded-md hover:bg-blue-700 transition cursor-pointer shadow-sm flex items-center space-x-1"
         >
-          <Plus size={16} strokeWidth={2.5} />
-          <span>New Inspection</span>
+          <span>+ New Inspection</span>
         </button>
       </div>
     </header>
