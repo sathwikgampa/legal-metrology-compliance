@@ -678,55 +678,99 @@ body {
   text-decoration: underline;
 }
 
-/* Dashboard Metric Boxes */
+/* Dashboard KPI Summary Cards */
 .metrics-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1100px) {
+  .metrics-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .metrics-cards-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .metric-box {
   background-color: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1.15rem;
+  border-radius: 8px;
+  padding: 1.35rem 1.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
+  transition: all 0.2s ease;
 }
 
 .metric-box:hover {
-  border-color: var(--accent);
+  border-color: rgba(36, 85, 164, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  transform: translateY(-1px);
 }
 
 .metric-box-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.6rem;
 }
 
-.metric-box-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+.metric-box-title {
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-family: var(--font-mono);
+  letter-spacing: -0.1px;
+}
+
+.metric-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.metric-indicator-dot.dot-green {
+  background-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.metric-indicator-dot.dot-red {
+  background-color: #EF4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.metric-indicator-dot.dot-yellow {
+  background-color: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+.metric-indicator-dot.dot-neutral {
+  background-color: #2455A4;
+  box-shadow: 0 0 0 3px rgba(36, 85, 164, 0.15);
 }
 
 .metric-box-val {
-  font-size: 2.2rem;
+  font-size: 2.25rem;
   font-weight: 800;
-  font-family: var(--font-mono);
+  font-family: var(--font-family);
+  font-feature-settings: 'tnum';
   line-height: 1.1;
   color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 0.45rem;
 }
 
 .metric-box-sub {
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   color: var(--ink-faint);
+  line-height: 1.35;
 }
 
 /* Compliance Status Badge — Single Source of Truth */
