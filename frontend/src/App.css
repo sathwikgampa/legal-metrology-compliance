@@ -1,21 +1,23 @@
+@import "tailwindcss";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
+
 /* ==========================================================================
    AI-Assisted Legal Metrology Inspection System
-   Design System: Government Inspection Ledger
-   New Palette: Light Paper & Deep Ink with Civic Status Tokens
+   Design System: Government Inspection Ledger & Tailwind CSS v4
    ========================================================================== */
 
 :root {
   /* Official New Palette Tokens */
-  --paper: #F7F8FA;            /* Page background (very light gray-white) */
-  --paper-raised: #FFFFFF;     /* Cards, panels, sidebar */
-  --ink: #1B2430;              /* Primary text */
-  --ink-soft: #5B6472;         /* Secondary text */
-  --ink-faint: #93999F;        /* Muted labels */
-  --line: #E3E6EA;             /* Hairline borders */
-  --line-subtle: #EFF1F4;      /* Sub-hairlines */
-  --accent: #2455A4;           /* Primary actions, links, active states */
-  --accent-soft: #EAF1FB;      /* Accent backgrounds */
-  --accent-hover: #1b4282;
+  --paper: #F8FAFC;            /* Clean light background */
+  --paper-raised: #FFFFFF;     /* Flat white for cards, panels, sidebar */
+  --ink: #0F172A;              /* Crisp dark primary text */
+  --ink-soft: #475569;         /* Secondary slate text */
+  --ink-faint: #94A3B8;        /* Muted labels */
+  --line: #E2E8F0;             /* Thin, light border (#E2E8F0) */
+  --line-subtle: #F1F5F9;      /* Sub-hairlines */
+  --accent: #2563EB;           /* Solid blue primary actions */
+  --accent-soft: #EFF6FF;      /* Accent backgrounds */
+  --accent-hover: #1D4ED8;
 
   /* Civic Status Tokens (Unchanged functional civic colors) */
   --ok: #22c55e;
@@ -719,9 +721,9 @@ body {
 .content-card {
   background-color: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  border-radius: 6px;
+  padding: 1.35rem 1.5rem;
+  box-shadow: none;
 }
 
 .card-header {
@@ -785,18 +787,16 @@ body {
 .metric-box {
   background-color: var(--paper-raised);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 1.6rem 1.6rem 1.85rem 1.6rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.02);
-  transition: all 0.2s ease;
+  box-shadow: none;
+  transition: border-color 0.2s ease;
 }
 
 .metric-box:hover {
-  border-color: rgba(36, 85, 164, 0.3);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
-  transform: translateY(-1px);
+  border-color: #CBD5E1;
 }
 
 .metric-box-top {
@@ -1124,11 +1124,11 @@ body {
 .snippet-label { color: var(--ink-faint); font-family: var(--font-mono); }
 .snippet-text { color: var(--accent); font-family: var(--font-mono); font-weight: 600; }
 
-/* Dashboard Grids & Distribution */
+/* Dashboard Grids & Distribution: 60% Left Panel, 40% Right Panel */
 .dashboard-grid-2col {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 1.25rem;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.5rem;
 }
 
 .distribution-bar-wrap {
@@ -2250,15 +2250,15 @@ body {
    Premium Dark Mode Variant (User Configurable Option)
    ========================================================================== */
 
-[data-theme="dark"], body.dark-theme {
-  /* Dark Mode Palette Tokens */
-  --paper: #0F172A;                     /* Primary deep slate background */
-  --paper-raised: #1E293B;              /* Card elements, panels & sidebar: Slate 800 */
+[data-theme="dark"], body.dark-theme, .dark {
+  /* Dark Mode Palette Tokens: Primary #1E293B, Cards/Sidebar #334155 */
+  --paper: #1E293B;                     /* Primary background: crisp dark charcoal (#1E293B) */
+  --paper-raised: #334155;              /* Card elements, panels & sidebar: slightly lighter dark slate (#334155) */
   --ink: #FFFFFF;                       /* Crisp white for main titles and bold numbers */
-  --ink-soft: #94A3B8;                  /* Off-white/light gray for secondary labels */
-  --ink-faint: #64748B;                 /* Muted descriptions and dockets */
-  --line: rgba(255, 255, 255, 0.1);    /* Faint low-opacity white lines */
-  --line-subtle: rgba(255, 255, 255, 0.06);
+  --ink-soft: #CBD5E1;                  /* Off-white/light gray for secondary labels */
+  --ink-faint: #94A3B8;                 /* Muted descriptions and dockets */
+  --line: rgba(255, 255, 255, 0.12);   /* Faint low-opacity white lines */
+  --line-subtle: rgba(255, 255, 255, 0.08);
   --accent: #3B82F6;                    /* Royal blue interactive */
   --accent-soft: rgba(59, 130, 246, 0.15); /* Soft accent glow */
   --accent-hover: #60A5FA;
@@ -2278,21 +2278,23 @@ body {
 }
 
 /* Dark Mode Components Styling */
-[data-theme="dark"] .content-card {
-  background-color: #1E293B;
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+[data-theme="dark"] .content-card,
+.dark .content-card {
+  background-color: #334155;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
-[data-theme="dark"] .metric-box {
-  background-color: #1E293B;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+[data-theme="dark"] .metric-box,
+.dark .metric-box {
+  background-color: #334155;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: none;
 }
 
-[data-theme="dark"] .metric-box:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+[data-theme="dark"] .metric-box:hover,
+.dark .metric-box:hover {
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Metric Indicator Glowing Dots in Dark Mode */

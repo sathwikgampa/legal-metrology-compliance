@@ -17,13 +17,15 @@ export function ThemeProvider({ children }) {
     const root = document.documentElement;
     if (isDarkMode) {
       root.setAttribute('data-theme', 'dark');
-      document.body.classList.add('dark-theme');
+      root.classList.add('dark');
+      document.body.classList.add('dark', 'dark-theme');
       try {
         localStorage.setItem('lm_theme', 'dark');
       } catch (e) {}
     } else {
       root.setAttribute('data-theme', 'light');
-      document.body.classList.remove('dark-theme');
+      root.classList.remove('dark');
+      document.body.classList.remove('dark', 'dark-theme');
       try {
         localStorage.setItem('lm_theme', 'light');
       } catch (e) {}
