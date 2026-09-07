@@ -2245,3 +2245,324 @@ body {
   .viewer-sidebar-inspector { width: 100%; border-left: none; border-top: 1px solid var(--line); }
   .filter-controls-grid { grid-template-columns: 1fr; }
 }
+
+/* ==========================================================================
+   Premium Dark Mode Variant (User Configurable Option)
+   ========================================================================== */
+
+[data-theme="dark"], body.dark-theme {
+  /* Dark Mode Palette Tokens */
+  --paper: #0F172A;                     /* Primary deep slate background */
+  --paper-raised: #1E293B;              /* Card elements, panels & sidebar: Slate 800 */
+  --ink: #FFFFFF;                       /* Crisp white for main titles and bold numbers */
+  --ink-soft: #94A3B8;                  /* Off-white/light gray for secondary labels */
+  --ink-faint: #64748B;                 /* Muted descriptions and dockets */
+  --line: rgba(255, 255, 255, 0.1);    /* Faint low-opacity white lines */
+  --line-subtle: rgba(255, 255, 255, 0.06);
+  --accent: #3B82F6;                    /* Royal blue interactive */
+  --accent-soft: rgba(59, 130, 246, 0.15); /* Soft accent glow */
+  --accent-hover: #60A5FA;
+
+  /* Adjusted Soft Glowing Semantic Civic Colors */
+  --ok: #34D399;                        /* Soft emerald green */
+  --ok-bg: rgba(52, 211, 153, 0.12);
+  --ok-border: #34D399;
+
+  --bad: #F87171;                       /* Vibrant coral/crimson */
+  --bad-bg: rgba(248, 113, 113, 0.14);
+  --bad-border: #F87171;
+
+  --warn: #FBBF24;                      /* Warm, bright amber */
+  --warn-bg: rgba(251, 191, 36, 0.14);
+  --warn-border: #FBBF24;
+}
+
+/* Dark Mode Components Styling */
+[data-theme="dark"] .content-card {
+  background-color: #1E293B;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .metric-box {
+  background-color: #1E293B;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .metric-box:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* Metric Indicator Glowing Dots in Dark Mode */
+[data-theme="dark"] .metric-indicator-dot.dot-green {
+  background-color: #34D399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2), 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+[data-theme="dark"] .metric-indicator-dot.dot-red {
+  background-color: #F87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2), 0 0 8px rgba(248, 113, 113, 0.4);
+}
+
+[data-theme="dark"] .metric-indicator-dot.dot-yellow {
+  background-color: #FBBF24;
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2), 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+[data-theme="dark"] .metric-indicator-dot.dot-neutral {
+  background-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+/* Distribution Bar & Glowing Progress Segments */
+[data-theme="dark"] .distribution-bar-flat {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .seg-emerald,
+[data-theme="dark"] .dot-emerald {
+  background-color: #34D399;
+}
+[data-theme="dark"] .dot-emerald {
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25), 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+[data-theme="dark"] .seg-crimson,
+[data-theme="dark"] .dot-crimson {
+  background-color: #F87171;
+}
+[data-theme="dark"] .dot-crimson {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25), 0 0 8px rgba(248, 113, 113, 0.4);
+}
+
+[data-theme="dark"] .seg-amber,
+[data-theme="dark"] .dot-amber {
+  background-color: #FBBF24;
+}
+[data-theme="dark"] .dot-amber {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25), 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+/* Statutory Enforcement Advisory in Dark Midnight Blue */
+[data-theme="dark"] .low-contrast-alert {
+  background-color: #0F1F38; /* Dark midnight blue container */
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="dark"] .low-contrast-icon {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .low-contrast-title {
+  color: #93C5FD; /* Clear, light blue title */
+}
+
+[data-theme="dark"] .low-contrast-text {
+  color: #BFDBFE; /* Clear, light blue text */
+}
+
+[data-theme="dark"] .low-contrast-dismiss {
+  color: #93C5FD;
+}
+
+[data-theme="dark"] .low-contrast-dismiss:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+/* Secondary Action Outline Buttons */
+[data-theme="dark"] .btn-secondary-action {
+  background-color: #1E293B;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .btn-secondary-action:hover {
+  background-color: #334155;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .btn-outline {
+  background-color: #1E293B;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #CBD5E1;
+}
+
+[data-theme="dark"] .btn-outline:hover {
+  background-color: #334155;
+  border-color: #3B82F6;
+  color: #60A5FA;
+}
+
+/* Category Audit Breakdown in Dark Mode */
+[data-theme="dark"] .category-audit-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Faint divider line */
+}
+
+[data-theme="dark"] .category-audit-row:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .badge-audit-compliant {
+  background-color: rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #34D399;
+}
+
+[data-theme="dark"] .badge-audit-warning {
+  background-color: rgba(248, 113, 113, 0.14);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #F87171;
+}
+
+/* Top Navbar & Sidebar Dark Mode Overrides */
+[data-theme="dark"] .app-navbar {
+  background-color: #1E293B;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .navbar-search-input {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .navbar-search-input:focus {
+  background-color: #1E293B;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FBBF24;
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+  background-color: #334155;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .sim-toggle-block,
+[data-theme="dark"] .officer-profile-badge {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .app-sidebar {
+  background-color: #1E293B;
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .sidebar-divider {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .sidebar-link.active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60A5FA;
+  border-left-color: #3B82F6;
+}
+
+[data-theme="dark"] .sidebar-link.active .sidebar-nav-icon {
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .scenario-item:hover,
+[data-theme="dark"] .scenario-item.active {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60A5FA;
+}
+
+[data-theme="dark"] .sidebar-settings-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-header-flex {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .data-table th {
+  background-color: #0F172A;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+}
+
+[data-theme="dark"] .data-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  color: #F1F5F9;
+}
+
+[data-theme="dark"] .table-row-hover:hover {
+  background-color: rgba(59, 130, 246, 0.08);
+}
+
+[data-theme="dark"] .text-input,
+[data-theme="dark"] .select-input,
+[data-theme="dark"] .textarea-input {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+[data-theme="dark"] .upload-slot-box {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .upload-slot-box:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: #3B82F6;
+}
+
+[data-theme="dark"] .review-pane {
+  background-color: #1E293B;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .system-summary-box,
+[data-theme="dark"] .finding-assessment-card {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .evidence-viewer-wrapper {
+  background-color: #1E293B;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .viewer-header,
+[data-theme="dark"] .image-panel-tabs {
+  background-color: #0F172A;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .viewer-sidebar-inspector {
+  background-color: #1E293B;
+  border-left-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .ocr-evidence-item {
+  background-color: #0F172A;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .ocr-evidence-item:hover,
+[data-theme="dark"] .ocr-evidence-item.active-evidence {
+  border-color: #3B82F6;
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
