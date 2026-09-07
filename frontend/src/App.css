@@ -1206,6 +1206,7 @@ body {
 
 .low-contrast-content {
   flex: 1;
+  padding-right: 2rem; /* Clear breathing room between text and close icon */
 }
 
 .low-contrast-title {
@@ -1220,7 +1221,7 @@ body {
   font-size: 0.74rem;
   color: var(--ink-soft);
   margin-top: 0.2rem;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .low-contrast-dismiss {
@@ -1228,19 +1229,29 @@ body {
   border: none;
   color: var(--ink-faint);
   cursor: pointer;
-  padding: 2px;
-  border-radius: 3px;
-  transition: color 0.15s ease;
+  padding: 3px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .low-contrast-dismiss:hover {
   color: var(--ink);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Category Audit Breakdown Card */
+.category-audit-card {
+  height: auto !important;
+  min-height: fit-content !important;
+  display: flex;
+  flex-direction: column;
+}
+
 .category-audit-list {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 /* Product row with subtle, light-gray horizontal divider line between each row */
@@ -1270,7 +1281,7 @@ body {
 .cat-row-info {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.25rem; /* Consistent vertical spacing for all subtext */
 }
 
 .cat-row-name {

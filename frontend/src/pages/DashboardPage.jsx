@@ -209,7 +209,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Category Audit Breakdown Card */}
-        <div className="content-card">
+        <div className="content-card category-audit-card">
           <div className="card-header">
             <h3 className="card-title">Category Audit Breakdown</h3>
             <span className="card-subtitle">
