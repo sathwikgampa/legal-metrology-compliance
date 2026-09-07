@@ -1,9 +1,20 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
 
+@layer base {
+  *, ::before, ::after {
+    border-color: #e2e8f0;
+    --tw-border-style: solid;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer components {
 /* ==========================================================================
    AI-Assisted Legal Metrology Inspection System
-   Design System: Government Inspection Ledger & Tailwind CSS v4
+   Legacy & Component Design Tokens
    ========================================================================== */
 
 :root {
@@ -2566,5 +2577,6 @@ body {
 [data-theme="dark"] .ocr-evidence-item.active-evidence {
   border-color: #3B82F6;
   background-color: rgba(59, 130, 246, 0.15);
+}
 }
 
