@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 
-interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
   spotlightColor?: string
   children: React.ReactNode
 }
 
-export default function SpotlightCard({
+export function SpotlightCard({
   spotlightColor = "rgba(37, 99, 235, 0.08)",
   className,
   children,
@@ -67,3 +67,5 @@ export default function SpotlightCard({
     </div>
   )
 }
+
+export default SpotlightCard

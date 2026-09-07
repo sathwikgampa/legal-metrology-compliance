@@ -1,19 +1,22 @@
 import React, { useRef, useState } from "react"
 import { motion } from "framer-motion"
 
-interface MagneticButtonProps {
+export interface MagneticButtonProps {
   children: React.ReactNode
   distance?: number
+  strength?: number
   className?: string
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
 }
 
-export default function MagneticButton({
+export function MagneticButton({
   children,
-  distance = 0.2,
+  distance,
+  strength = 0.2,
   className = "",
   onClick,
 }: MagneticButtonProps) {
+  const pull = distance ?? strength
   const ref = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
@@ -23,7 +26,7 @@ export default function MagneticButton({
     const { left, top, width, height } = ref.current.getBoundingClientRect()
     const middleX = clientX - (left + width / 2)
     const middleY = clientY - (top + height / 2)
-    setPosition({ x: middleX * distance, y: middleY * distance })
+    setPosition({ x: middleX * pull, y: middleY * pull })
   }
 
   const handleMouseLeave = () => {
@@ -44,3 +47,5 @@ export default function MagneticButton({
     </motion.div>
   )
 }
+
+export default MagneticButton

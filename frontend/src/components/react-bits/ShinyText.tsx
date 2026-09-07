@@ -1,14 +1,14 @@
 import React from "react"
 import { cn } from "@/lib/utils"
 
-interface ShinyTextProps {
+export interface ShinyTextProps {
   text: string
   disabled?: boolean
   speed?: number
   className?: string
 }
 
-export default function ShinyText({
+export function ShinyText({
   text,
   disabled = false,
   speed = 4,
@@ -30,3 +30,5 @@ export default function ShinyText({
     </span>
   )
 }
+
+export default ShinyText

@@ -1,6 +1,7 @@
 import React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import SpotlightCard from "@/components/react-bits/SpotlightCard"
+import CountUp from "@/components/react-bits/CountUp"
 import { cn } from "@/lib/utils"
 
 export interface DashboardStatsProps {
@@ -74,8 +75,8 @@ export default function DashboardCards({ stats }: DashboardStatsProps): React.JS
                 <span>{card.title}</span>
                 <span className={cn("w-2 h-2 rounded-full ring-2 ring-background", card.dotColor)} />
               </div>
-              <CardTitle className="text-2xl font-extrabold text-foreground tracking-tight my-1">
-                {card.value}
+              <CardTitle className="text-2xl font-extrabold text-foreground tracking-tight my-1 flex items-center">
+                <CountUp to={card.value} duration={1.2} />
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">

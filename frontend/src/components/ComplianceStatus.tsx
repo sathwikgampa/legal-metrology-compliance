@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 export interface ComplianceStatusProps {
   status: string
-  size?: "sm" | "default" | "lg"
+  size?: "sm" | "default" | "md" | "lg"
   iconOnly?: boolean
   className?: string
 }
@@ -16,13 +16,14 @@ export default function ComplianceStatus({
   className = "",
 }: ComplianceStatusProps): React.JSX.Element {
   const normalized = (status || "").toUpperCase()
+  const badgeSize = size === "sm" ? "sm" : size === "lg" ? "lg" : "default"
 
   switch (normalized) {
     case "COMPLIANT":
       return (
         <Badge
           variant="compliant"
-          size={size === "sm" ? "sm" : "default"}
+          size={badgeSize}
           className={cn("gap-1 font-mono uppercase tracking-wider font-bold", className)}
           title="Fully Compliant with Packaged Commodities Rules"
         >
@@ -35,7 +36,7 @@ export default function ComplianceStatus({
       return (
         <Badge
           variant="violation"
-          size={size === "sm" ? "sm" : "default"}
+          size={badgeSize}
           className={cn("gap-1 font-mono uppercase tracking-wider font-bold", className)}
           title="Potential Non-Compliance Identified"
         >
@@ -50,7 +51,7 @@ export default function ComplianceStatus({
       return (
         <Badge
           variant="warning"
-          size={size === "sm" ? "sm" : "default"}
+          size={badgeSize}
           className={cn("gap-1 font-mono uppercase tracking-wider font-bold", className)}
           title="Uncertain Evidence — Requires Officer Examination"
         >
@@ -63,7 +64,7 @@ export default function ComplianceStatus({
       return (
         <Badge
           variant="warning"
-          size={size === "sm" ? "sm" : "default"}
+          size={badgeSize}
           className={cn("gap-1 font-mono uppercase tracking-wider font-bold", className)}
           title="Mandatory declaration was not detected by OCR in scanned surfaces"
         >
@@ -76,7 +77,7 @@ export default function ComplianceStatus({
       return (
         <Badge
           variant="neutral"
-          size={size === "sm" ? "sm" : "default"}
+          size={badgeSize}
           className={cn("gap-1 font-mono uppercase tracking-wider font-medium", className)}
         >
           <span>⚪</span>

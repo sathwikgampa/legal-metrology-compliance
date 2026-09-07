@@ -2,7 +2,7 @@ import React from "react"
 import { motion, type HTMLMotionProps } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-interface BlurTextProps {
+export interface BlurTextProps {
   text: string
   delay?: number
   className?: string
@@ -10,7 +10,7 @@ interface BlurTextProps {
   direction?: "top" | "bottom"
 }
 
-export default function BlurText({
+export function BlurText({
   text,
   delay = 50,
   className = "",
@@ -47,3 +47,5 @@ export default function BlurText({
     </span>
   )
 }
+
+export default BlurText
