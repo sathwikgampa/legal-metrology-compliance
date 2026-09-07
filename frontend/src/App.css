@@ -1050,79 +1050,182 @@ body {
 .distribution-bar-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1.1rem;
   margin-top: 0.5rem;
 }
 
-.distribution-bar {
+/* Modern flat horizontal stacked progress bar */
+.distribution-bar-flat {
   display: flex;
-  height: 20px;
-  border-radius: 3px;
+  height: 28px;
+  border-radius: 6px;
   overflow: hidden;
   background-color: var(--paper);
   border: 1px solid var(--line);
+  padding: 2px;
+  gap: 2px;
 }
 
-.dist-compliant { background-color: var(--ok); }
-.dist-violation { background-color: var(--bad); }
-.dist-review { background-color: var(--warn); }
+.dist-bar-segment {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-.dist-legend {
+/* Refined palette: Emerald Green, Soft Crimson, Warm Amber */
+.seg-emerald { background-color: #10B981; }
+.seg-crimson { background-color: #EF4444; }
+.seg-amber { background-color: #F59E0B; }
+
+.dist-legend-flat {
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.75rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.78rem;
   color: var(--ink-soft);
-  font-family: var(--font-mono);
 }
 
-.legend-item {
+.legend-dot-refined {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-emerald { background-color: #10B981; }
+.dot-crimson { background-color: #EF4444; }
+.dot-amber { background-color: #F59E0B; }
+
+.legend-label {
+  font-weight: 500;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+}
+
+/* Elegant, low-contrast information alert banner */
+.low-contrast-alert {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background-color: #F3F6FB;
+  border: 1px solid rgba(36, 85, 164, 0.16);
+  border-radius: 6px;
+  margin-top: 1.25rem;
 }
 
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
+.low-contrast-icon {
+  color: var(--accent);
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
-.category-stats-list {
+.low-contrast-content {
+  flex: 1;
+}
+
+.low-contrast-title {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.1px;
+}
+
+.low-contrast-text {
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+.low-contrast-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  transition: color 0.15s ease;
+}
+
+.low-contrast-dismiss:hover {
+  color: var(--ink);
+}
+
+/* Category Audit Breakdown Card */
+.category-audit-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
-.category-stat-row {
+.category-audit-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.6rem 0.85rem;
-  background-color: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 3px;
+  padding: 0.85rem 0.25rem;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.15s ease;
 }
 
-.cat-name { font-size: 0.85rem; }
-.cat-sub {
-  display: block;
-  font-size: 0.7rem;
+.category-audit-row:last-child {
+  border-bottom: none;
+}
+
+.cat-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cat-row-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cat-row-count {
+  font-size: 0.74rem;
   color: var(--ink-faint);
-  font-family: var(--font-mono);
 }
 
-.badge-violation-sm {
-  color: var(--bad-border);
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
+.cat-row-badge {
+  display: flex;
+  align-items: center;
 }
 
-.badge-compliant-sm {
-  color: var(--ok-border);
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
+.badge-audit-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #DC2626;
+}
+
+.badge-icon-warning {
+  color: #DC2626;
+}
+
+.badge-audit-compliant {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+.badge-icon-compliant {
+  color: #059669;
 }
 
 /* Form Styles */

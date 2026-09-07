@@ -922,9 +922,8 @@ export const MOCK_DASHBOARD_STATS = {
   pending_officer_review: 4,
   category_breakdown: [
     { category: "Food & Grains", count: 7, violations: 1 },
-    { category: "Snacks & Confectionery", count: 4, violations: 2 },
-    { category: "Cosmetics & Care", count: 3, violations: 1 },
-    { category: "Household Cleaners", count: 2, violations: 0 },
-    { category: "Beverages", count: 2, violations: 1 }
+    { category: "Snacks", count: 5, violations: 2 },
+    { category: "Cosmetics", count: 4, violations: 1 },
+    { category: "Household", count: 3, violations: 0 }
   ]
 };
