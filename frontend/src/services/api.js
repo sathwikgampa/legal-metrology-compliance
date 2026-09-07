@@ -1,7 +1,7 @@
 /**
  * Service Layer for Legal Metrology Frontend
- * All API interactions must route through this file.
- * Backed by mock datasets with simulated latency and optional error simulation.
+ * All API interactions route exclusively through this file.
+ * Backed by structured mock datasets with simulated latency and test error modes.
  */
 
 import {
@@ -10,45 +10,61 @@ import {
   MOCK_DASHBOARD_STATS
 } from '../mock/inspectionData';
 
-// Global error simulation flag (can be toggled in dev/testing)
-let simulateNetworkError = false;
+// Simulated error state controls for testing ErrorState UI
+let simulateErrorMode = null; // null | 'network' | 'ocr' | 'analysis'
 
-export function setSimulateNetworkError(shouldError) {
-  simulateNetworkError = shouldError;
+export function setSimulateErrorMode(mode) {
+  simulateErrorMode = mode;
+}
+
+export function getSimulateErrorMode() {
+  return simulateErrorMode;
+}
+
+export function setSimulateNetworkError(isError) {
+  simulateErrorMode = isError ? 'network' : null;
 }
 
 export function getSimulateNetworkError() {
-  return simulateNetworkError;
+  return simulateErrorMode === 'network';
 }
 
-// In-memory inspection cache so mutations during a session (new inspections, officer reviews) persist
+// In-memory cache for mutations
 const inMemoryInspections = { ...MOCK_INSPECTIONS };
 const inMemoryHistory = [...HISTORICAL_INSPECTIONS];
 
-const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms = 250) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Creates a new inspection draft
+ * 1. createInspection(payload)
+ * Initializes a new packaging inspection docket
  */
 export async function createInspection(payload) {
-  await delay(350);
-  if (simulateNetworkError) throw new Error("Network error: Failed to create inspection draft.");
+  await delay(300);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Backend service unavailable. Inspection docket creation timed out.");
+  }
 
-  const newId = `INS-2024-${String(Object.keys(inMemoryInspections).length + 1).padStart(3, '0')}`;
+  const nextIndex = Object.keys(inMemoryInspections).length + 1;
+  const newId = `INS-2024-${String(nextIndex).padStart(3, '0')}`;
+  const newDocket = `LMO/ZN4/2026/${String(890 + nextIndex).padStart(4, '0')}`;
+
   const newRecord = {
     id: newId,
+    docket_number: newDocket,
     timestamp: new Date().toISOString(),
     product: {
-      name: payload.name || "Unnamed Commodity",
+      name: payload.name || "Unnamed Pre-Packaged Commodity",
       brand: payload.brand || "General Brand",
       category: payload.category || "General Commodity",
-      batch_number: payload.batch_number || "BATCH-NEW",
-      declared_net_quantity: payload.declared_net_quantity || ""
+      batch_number: payload.batch_number || "BATCH-001",
+      declared_net_quantity: payload.declared_net_quantity || "",
+      mrp: payload.mrp || ""
     },
     image_quality_status: {
       status: "ACCEPTABLE",
-      score: 0.92,
-      laplacian_variance: 390.0,
+      score: 0.94,
+      laplacian_variance: 410.0,
       description: "Packaging images verified for clarity."
     },
     uploaded_images: [],
@@ -70,17 +86,20 @@ export async function createInspection(payload) {
 }
 
 /**
- * Attaches uploaded image slots to an inspection record
+ * 2. uploadImages(inspectionId, filesWithRoles)
+ * Binds uploaded images into labeled panel slots (front, back, side, close-up)
  */
 export async function uploadImages(inspectionId, filesWithRoles) {
-  await delay(400);
-  if (simulateNetworkError) throw new Error("Network error: Failed to upload commodity images.");
+  await delay(350);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Network error: Packaging images upload failed. Check connection.");
+  }
 
   const record = inMemoryInspections[inspectionId];
-  if (!record) throw new Error(`Inspection ${inspectionId} not found.`);
+  if (!record) throw new Error(`Inspection docket ${inspectionId} not found.`);
 
   const images = filesWithRoles.map((item, idx) => ({
-    id: `IMG-${inspectionId}-${idx + 1}`,
+    image_id: `IMG${String(idx + 1).padStart(3, '0')}`,
     role: item.role,
     name: item.file.name,
     url: item.previewUrl || URL.createObjectURL(item.file),
@@ -92,65 +111,71 @@ export async function uploadImages(inspectionId, filesWithRoles) {
 }
 
 /**
- * Triggers compliance analysis pipeline and returns synthesized findings
+ * 3. analyzeInspection(inspectionId)
+ * Runs automated OCR and rule verification pipeline
  */
 export async function analyzeInspection(inspectionId) {
-  await delay(600);
-  if (simulateNetworkError) throw new Error("Analysis failed: Backend AI service unavailable.");
+  await delay(500);
+  if (simulateErrorMode === 'ocr') {
+    throw new Error("OCR Engine Failure: Character segmentation failed on package surfaces.");
+  }
+  if (simulateErrorMode === 'analysis') {
+    throw new Error("Analysis Failure: Legal Metrology rule engine encountered a parsing error.");
+  }
 
   const record = inMemoryInspections[inspectionId];
-  if (!record) throw new Error(`Inspection ${inspectionId} not found.`);
+  if (!record) throw new Error(`Inspection docket ${inspectionId} not found.`);
 
-  // If inspection already has declarations populated (e.g. from mock presets), return it
+  // If already populated from a mock preset, return as is
   if (record.extracted_declarations && record.extracted_declarations.length > 0) {
     return record;
   }
 
-  // Generate standard declarations and mock OCR results adhering to data contract
-  const defaultImageId = record.uploaded_images[0]?.id || `IMG-${inspectionId}-FRONT`;
+  const defaultImgId = record.uploaded_images[0]?.image_id || "IMG001";
 
+  // Build realistic OCR tokens matching exact format
   record.ocr_results = [
     {
-      image_id: defaultImageId,
+      image_id: defaultImgId,
       text: `${record.product.name}`,
       confidence: 0.98,
-      bbox: [80, 240, 440, 45]
+      bbox: [100, 250, 400, 300]
     },
     {
-      image_id: defaultImageId,
+      image_id: defaultImgId,
       text: "MRP ₹199.00 (Incl. of all taxes)",
       confidence: 0.96,
-      bbox: [80, 460, 320, 35]
+      bbox: [80, 480, 340, 35]
     },
     {
-      image_id: defaultImageId,
+      image_id: defaultImgId,
       text: `Net Quantity: ${record.product.declared_net_quantity || "500 g"}`,
       confidence: 0.95,
-      bbox: [80, 510, 240, 35]
+      bbox: [80, 525, 260, 35]
     },
     {
-      image_id: defaultImageId,
+      image_id: defaultImgId,
       text: "Mfg Date: 08/2026",
       confidence: 0.93,
-      bbox: [80, 560, 200, 35]
+      bbox: [80, 570, 210, 35]
     },
     {
-      image_id: defaultImageId,
-      text: `Mfd by: ${record.product.brand}, Industrial Area, Phase I`,
-      confidence: 0.91,
-      bbox: [80, 610, 420, 40]
+      image_id: defaultImgId,
+      text: `Manufactured By: ${record.product.brand}, Industrial Area Phase I`,
+      confidence: 0.92,
+      bbox: [80, 615, 420, 40]
     }
   ];
 
   record.extracted_declarations = [
     {
       field: "product_name",
-      label: "Name of Commodity",
+      label: "Name / Description of Commodity",
       detected_value: record.product.name,
       is_detected: true,
       confidence: 0.98,
       status: "COMPLIANT",
-      evidence: { image_id: defaultImageId, bbox: [80, 240, 440, 45], text: record.product.name }
+      evidence: { image_id: defaultImgId, bbox: [100, 250, 400, 300], text: record.product.name }
     },
     {
       field: "mrp",
@@ -159,20 +184,20 @@ export async function analyzeInspection(inspectionId) {
       is_detected: true,
       confidence: 0.96,
       status: "COMPLIANT",
-      evidence: { image_id: defaultImageId, bbox: [80, 460, 320, 35], text: "MRP ₹199.00" }
+      evidence: { image_id: defaultImgId, bbox: [80, 480, 340, 35], text: "MRP ₹199.00" }
     },
     {
       field: "net_quantity",
-      label: "Net Quantity",
+      label: "Net Quantity Declaration",
       detected_value: record.product.declared_net_quantity || "500 g",
       is_detected: true,
       confidence: 0.95,
       status: "COMPLIANT",
-      evidence: { image_id: defaultImageId, bbox: [80, 510, 240, 35], text: "Net Quantity" }
+      evidence: { image_id: defaultImgId, bbox: [80, 525, 260, 35], text: "Net Quantity" }
     },
     {
       field: "consumer_care",
-      label: "Consumer Care Details",
+      label: "Consumer Care & Grievance Contact",
       detected_value: "",
       is_detected: false,
       confidence: 0.0,
@@ -184,18 +209,18 @@ export async function analyzeInspection(inspectionId) {
   record.compliance_findings = [
     {
       id: `FND-${inspectionId}-1`,
-      issue: "Consumer care details not detected on packaging",
-      related_declaration: "Consumer Care Details",
+      issue: "Consumer care details not detected on package",
+      related_declaration: "Consumer Care & Grievance Contact",
       status: "POTENTIAL_VIOLATION",
-      explanation: "Mandatory telephone number, email, or postal address for consumer grievances was not detected by OCR.",
+      explanation: "Mandatory telephone number, email, or postal address for consumer complaints was not detected in OCR tokens.",
       confidence: 0.91,
       evidence: {
-        image_id: defaultImageId,
+        image_id: defaultImgId,
         bbox: [60, 660, 480, 50],
         text: "[Region scanned: No care details detected]"
       },
-      source_image: defaultImageId,
-      rule_reference: "Legal Metrology (Packaged Commodities) Rules 2011, Rule 6(1)(ac)",
+      source_image: defaultImgId,
+      rule_reference: "Rule 6(1)(ac) - Consumer Care Details",
       severity: "HIGH"
     }
   ];
@@ -203,10 +228,11 @@ export async function analyzeInspection(inspectionId) {
   record.overall_status = "POTENTIAL_VIOLATION";
   record.overall_confidence = 0.91;
 
-  // Add to in-memory history if not present
-  if (!inMemoryHistory.find(h => h.id === record.id)) {
+  // Add to history registry
+  if (!inMemoryHistory.find((h) => h.id === record.id)) {
     inMemoryHistory.unshift({
       id: record.id,
+      docket_number: record.docket_number,
       product_name: record.product.name,
       category: record.product.category,
       timestamp: record.timestamp,
@@ -221,15 +247,17 @@ export async function analyzeInspection(inspectionId) {
 }
 
 /**
- * Retrieves full inspection record by ID
+ * 4. getInspection(inspectionId)
+ * Fetches full docket record by ID
  */
 export async function getInspection(inspectionId) {
-  await delay(250);
-  if (simulateNetworkError) throw new Error("Network error: Unable to retrieve inspection record.");
+  await delay(200);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Network connection error: Unable to retrieve inspection record from server.");
+  }
 
   const record = inMemoryInspections[inspectionId];
   if (!record) {
-    // If not in cache, fallback to first mock item for preview
     const fallback = MOCK_INSPECTIONS["INS-2024-001"];
     return { ...fallback, id: inspectionId };
   }
@@ -237,11 +265,14 @@ export async function getInspection(inspectionId) {
 }
 
 /**
- * Retrieves filtered inspection history
+ * 5. getInspectionHistory(filters)
+ * Returns filtered, searchable inspection registry
  */
 export async function getInspectionHistory(filters = {}) {
-  await delay(250);
-  if (simulateNetworkError) throw new Error("Network error: Failed to fetch inspection history.");
+  await delay(200);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Network error: Failed to fetch inspection ledger archives.");
+  }
 
   let results = [...inMemoryHistory];
 
@@ -258,6 +289,7 @@ export async function getInspectionHistory(filters = {}) {
     results = results.filter(
       (item) =>
         item.id.toLowerCase().includes(q) ||
+        (item.docket_number && item.docket_number.toLowerCase().includes(q)) ||
         item.product_name.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q)
     );
@@ -267,13 +299,15 @@ export async function getInspectionHistory(filters = {}) {
 }
 
 /**
- * Retrieves aggregated dashboard stats
+ * 6. getDashboardStats()
+ * Returns aggregated jurisdiction metrics
  */
 export async function getDashboardStats() {
-  await delay(200);
-  if (simulateNetworkError) throw new Error("Network error: Failed to fetch dashboard statistics.");
+  await delay(150);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Network error: Failed to retrieve dashboard metrics.");
+  }
 
-  // Calculate live counts from history
   const total = inMemoryHistory.length;
   const compliant = inMemoryHistory.filter((i) => i.status === "COMPLIANT").length;
   const violations = inMemoryHistory.filter((i) => i.status === "POTENTIAL_VIOLATION").length;
@@ -291,26 +325,28 @@ export async function getDashboardStats() {
 }
 
 /**
- * Records officer's legal review decision
+ * 7. submitOfficerDecision(inspectionId, decisionData)
+ * Records official Legal Metrology Officer statutory order
  */
 export async function submitOfficerDecision(inspectionId, decisionData) {
-  await delay(400);
-  if (simulateNetworkError) throw new Error("Network error: Failed to record officer decision.");
+  await delay(350);
+  if (simulateErrorMode === 'network') {
+    throw new Error("Submission Failed: Legal Metrology Officer order could not be committed.");
+  }
 
   const record = inMemoryInspections[inspectionId];
   if (record) {
     record.officer_decision = {
-      decision: decisionData.decision || "CONFIRMED",
+      decision: decisionData.decision || "APPROVED",
       remarks: decisionData.remarks || "",
       reviewed_at: new Date().toISOString(),
       finding_decisions: decisionData.finding_decisions || {}
     };
   }
 
-  // Update history record
   const hist = inMemoryHistory.find((h) => h.id === inspectionId);
   if (hist) {
-    hist.officer_decision = decisionData.decision || "CONFIRMED";
+    hist.officer_decision = decisionData.decision || "APPROVED";
   }
 
   return {
