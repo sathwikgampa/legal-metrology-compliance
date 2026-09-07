@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-from sqlalchemy.orm import Session
+from pymongo.database import Database
 from typing import Dict, Any
-from backend.app.database.database import get_db
-from backend.app.services.inspection_service import get_inspection_by_id, update_officer_review
+from app.database.database import get_db
+from app.services.inspection_service import get_inspection_by_id, update_officer_review
 
 router = APIRouter(prefix="", tags=["Inspection & Officer Review"])
 
 @router.get("/inspection/{inspection_id}")
-async def get_inspection(inspection_id: str, db: Session = Depends(get_db)):
+async def get_inspection(inspection_id: str, db: Database = Depends(get_db)):
     """
     Retrieves details for a specific inspection, including product declarations and violations.
     """
@@ -56,7 +56,7 @@ async def get_inspection(inspection_id: str, db: Session = Depends(get_db)):
 @router.post("/officer-review")
 async def record_officer_review(
     payload: Dict[str, Any] = Body(...),
-    db: Session = Depends(get_db)
+    db: Database = Depends(get_db)
 ):
     """
     Records human Legal Metrology Officer review decision and comments.

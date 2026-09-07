@@ -1,11 +1,27 @@
-from backend.app.database.database import engine, Base
-import backend.app.models  # Ensures all models are registered with Base
+from app.database.database import database
+from pymongo.errors import CollectionInvalid
+
+COLLECTIONS = ("products", "inspections", "violations", "reports", "users")
 
 def init_db():
-    """Create all tables in the SQLite database if they do not exist."""
-    Base.metadata.create_all(bind=engine)
+    """Verify MongoDB, create required collections, and initialize indexes."""
+    database.client.admin.command("ping")
+
+    existing_collections = set(database.list_collection_names())
+    for collection_name in COLLECTIONS:
+        if collection_name not in existing_collections:
+            try:
+                database.create_collection(collection_name)
+            except CollectionInvalid:
+                # Another initializer may have created it concurrently.
+                pass
+
+    database.inspections.create_index("created_at")
+    database.inspections.create_index("status")
+    database.inspections.create_index("officer_decision")
+    database.violations.create_index("inspection_id")
 
 if __name__ == "__main__":
-    print("Initializing SQLite database tables...")
+    print("Initializing MongoDB collections and indexes...")
     init_db()
-    print("Database tables initialized successfully.")
+    print("MongoDB collections and indexes initialized successfully.")
