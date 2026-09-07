@@ -86,180 +86,188 @@ export default function DashboardPage() {
   const reviewPct = Math.round(((stats?.needs_review || 0) / total) * 100);
 
   return (
-    <div className="page-container dashboard-page">
-      {/* Page Header with ample whitespace & secondary action button replacing duplicate */}
-      <div className="page-header-row">
+    <div className="p-6 space-y-6">
+      {/* Dashboard Title Block & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
         <div>
-          <h1 className="page-title">Compliance Dashboard</h1>
-          <p className="page-subtitle">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+            Compliance Dashboard
+          </h2>
+          <p className="text-xs text-slate-400">
             Legal Metrology (Packaged Commodities) Rules, 2011 • Enforcement & Regulatory Analytics
           </p>
         </div>
-
-        {/* Secondary action buttons with outline & subtle gray text */}
-        <div className="header-actions">
+        <div className="flex space-x-2">
           <button
-            className={`btn btn-outline btn-secondary-action ${dateFilterActive ? 'active-filter' : ''}`}
+            type="button"
             onClick={() => setDateFilterActive(!dateFilterActive)}
+            className={`flex items-center space-x-1.5 border border-slate-200 text-xs px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:hover:bg-slate-800 cursor-pointer transition-colors ${
+              dateFilterActive ? 'text-blue-600 font-medium border-blue-300 dark:text-blue-400 dark:border-blue-700' : 'text-slate-600 dark:text-slate-300'
+            }`}
             title="Filter dashboard records by date range"
           >
-            <Calendar size={15} className="btn-icon-subtle" />
+            <span>📅</span>
             <span>{dateFilterActive ? "Last 30 Days (Active)" : "Filter Date Range"}</span>
           </button>
-
           <button
-            className="btn btn-outline btn-secondary-action"
+            type="button"
             onClick={handleExportCSV}
+            className="flex items-center space-x-1.5 border border-slate-200 text-slate-600 text-xs px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300 dark:hover:bg-slate-800 cursor-pointer transition-colors"
             title="Export audit records to CSV spreadsheet"
           >
-            <Download size={15} className="btn-icon-subtle" />
+            <span>📥</span>
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Summary Cards */}
+      {/* TOP 4 METRICS CARDS GRID */}
       <DashboardCards stats={stats} />
 
-      {/* Analytics Grid: Compliance Status Distribution & Category Audit Breakdown */}
-      <div className="dashboard-grid-2col">
-        {/* Compliance Status Distribution Card */}
-        <div className="content-card">
-          <div className="card-header">
-            <h3 className="card-title">Compliance Status Distribution</h3>
-            <span className="card-subtitle">
+      {/* MAIN INTERFACE DATA GRID Split (2/3 and 1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Side: Status Distribution Data Graphic (2/3 Width) */}
+        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-6 flex flex-col justify-between transition-colors">
+          <div>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+              Compliance Status Distribution
+            </h3>
+            <p className="text-[11px] text-slate-400 mb-4">
               Aggregate statutory packaging audits across active jurisdiction
-            </span>
-          </div>
+            </p>
 
-          <div className="distribution-bar-wrap">
-            {/* Modern flat horizontal stacked progress bar */}
+            {/* Flat Progress Graph Segment Graphic */}
             <div
-              className="distribution-bar-flat"
+              className="w-full h-4 rounded-full overflow-hidden flex mb-4 bg-slate-100 dark:bg-slate-800"
               role="progressbar"
               aria-label="Compliance Status Distribution"
             >
               <div
-                className="dist-bar-segment seg-emerald"
+                className="bg-emerald-500 h-full transition-all duration-300"
                 style={{ width: `${compliantPct}%` }}
-                title={`Emerald Green: Compliant ${compliantPct}%`}
+                title={`Compliant (${compliantPct}%)`}
               />
               <div
-                className="dist-bar-segment seg-crimson"
+                className="bg-rose-500 h-full transition-all duration-300"
                 style={{ width: `${violationPct}%` }}
-                title={`Soft Crimson: Potential Violations ${violationPct}%`}
+                title={`Violations (${violationPct}%)`}
               />
               <div
-                className="dist-bar-segment seg-amber"
+                className="bg-amber-500 h-full transition-all duration-300"
                 style={{ width: `${reviewPct}%` }}
-                title={`Warm Amber: Needs Review ${reviewPct}%`}
+                title={`Needs Review (${reviewPct}%)`}
               />
             </div>
 
-            {/* Refined Color Legend: Distributed evenly across card width in a single horizontal row */}
-            <div className="dist-legend-distributed" role="list">
-              <div className="legend-dist-col" role="listitem">
-                <div className="legend-dot-refined dot-emerald" aria-hidden="true" />
-                <div className="legend-dist-meta">
-                  <span className="legend-dist-name">Emerald Green</span>
-                  <span className="legend-dist-val">Compliant ({compliantPct}%)</span>
+            {/* Clean Legend */}
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <div>
+                  <div className="font-medium text-slate-700 dark:text-slate-300">Emerald Green</div>
+                  <div className="text-[10px] text-slate-400">Compliant ({compliantPct}%)</div>
                 </div>
               </div>
-
-              <div className="legend-dist-col" role="listitem">
-                <div className="legend-dot-refined dot-crimson" aria-hidden="true" />
-                <div className="legend-dist-meta">
-                  <span className="legend-dist-name">Soft Crimson</span>
-                  <span className="legend-dist-val">Violations ({violationPct}%)</span>
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                <div>
+                  <div className="font-medium text-slate-700 dark:text-slate-300">Soft Crimson</div>
+                  <div className="text-[10px] text-slate-400">Violations ({violationPct}%)</div>
                 </div>
               </div>
-
-              <div className="legend-dist-col" role="listitem">
-                <div className="legend-dot-refined dot-amber" aria-hidden="true" />
-                <div className="legend-dist-meta">
-                  <span className="legend-dist-name">Warm Amber</span>
-                  <span className="legend-dist-val">Needs Review ({reviewPct}%)</span>
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                <div>
+                  <div className="font-medium text-slate-700 dark:text-slate-300">Warm Amber</div>
+                  <div className="text-[10px] text-slate-400">Needs Review ({reviewPct}%)</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Elegant Low-Contrast Information Alert Banner */}
+          {/* Statutory Advisory Box */}
           {!alertDismissed && (
-            <div className="low-contrast-alert mt-4" role="status">
-              <div className="low-contrast-icon">
-                <Info size={16} />
-              </div>
-              <div className="low-contrast-content">
-                <span className="low-contrast-title">Statutory Enforcement Advisory</span>
-                <p className="low-contrast-text">
-                  Packages flagged with non-compliant declarations require notice issuance under Rule 32. Packages under review warrant secondary visual verification before formal compounding.
-                </p>
+            <div className="bg-blue-50/60 border border-blue-100 rounded-lg p-3.5 flex items-start justify-between dark:bg-blue-950/20 dark:border-blue-900/40 mt-4 transition-colors">
+              <div className="flex space-x-2.5 pr-4">
+                <span className="text-blue-600 dark:text-blue-400 text-sm select-none">ℹ️</span>
+                <div>
+                  <h4 className="text-xs font-bold text-blue-900 dark:text-blue-200">
+                    Statutory Enforcement Advisory
+                  </h4>
+                  <p className="text-[11px] text-blue-700/80 dark:text-blue-300/70 mt-0.5 leading-relaxed">
+                    Packages flagged with potential violations require formal notice issuance under Rule 32. Packages under review warrant secondary visual verification before formal compounding.
+                  </p>
+                </div>
               </div>
               <button
-                className="low-contrast-dismiss"
+                type="button"
                 onClick={() => setAlertDismissed(true)}
-                aria-label="Dismiss alert"
+                className="text-blue-400 hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-300 text-xs cursor-pointer p-0.5"
                 title="Dismiss statutory advisory"
+                aria-label="Dismiss alert"
               >
-                <X size={14} />
+                ✕
               </button>
             </div>
           )}
         </div>
 
-        {/* Category Audit Breakdown Card */}
-        <div className="content-card category-audit-card">
-          <div className="card-header">
-            <h3 className="card-title">Category Audit Breakdown</h3>
-            <span className="card-subtitle">
+        {/* Right Side: Category Audit Breakdown (1/3 Width) */}
+        <div className="bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
+          <div>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+              Category Audit Breakdown
+            </h3>
+            <p className="text-[11px] text-slate-400">
               Commodity inspection records categorized by product sector
-            </span>
+            </p>
           </div>
 
-          {/* Clean product rows with subtle light-gray horizontal dividers */}
-          <div className="category-audit-list" role="list">
-            {(stats?.category_breakdown || []).map((cat, idx) => {
-              const isNonCompliant = cat.violations > 0;
-              return (
-                <div key={idx} className="category-audit-row" role="listitem">
-                  <div className="cat-row-info">
-                    <span className="cat-row-name">{cat.category}</span>
-                    <span className="cat-row-count">{cat.count} packages audited</span>
-                  </div>
-
-                  <div className="cat-row-badge">
-                    {isNonCompliant ? (
-                      <span className="badge-audit-warning">
-                        <AlertTriangle size={13} className="badge-icon-warning" />
-                        <span>{cat.violations} Non-Compliant</span>
-                      </span>
-                    ) : (
-                      <span className="badge-audit-compliant">
-                        <CheckCircle2 size={13} className="badge-icon-compliant" />
-                        <span>Compliant</span>
-                      </span>
-                    )}
-                  </div>
+          {/* Product Rows with subtle dividers */}
+          <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+            {(stats?.category_breakdown || [
+              { category: 'Food & Grains', count: 5, violations: 1 },
+              { category: 'Snacks', count: 1, violations: 1 },
+              { category: 'Cosmetics', count: 1, violations: 0 },
+              { category: 'Household', count: 1, violations: 0 }
+            ]).map((cat, idx) => (
+              <div key={idx} className="py-3 flex items-center justify-between first:pt-1 last:pb-1">
+                <div>
+                  <div className="font-medium text-slate-800 dark:text-slate-200">{cat.category}</div>
+                  <div className="text-[10px] text-slate-400">{cat.count} package{cat.count === 1 ? '' : 's'} audited</div>
                 </div>
-              );
-            })}
+                {cat.violations > 0 ? (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400 flex items-center space-x-1">
+                    <span>⚠️</span> <span>{cat.violations} Non-Compliant</span>
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-400 flex items-center space-x-1">
+                    <span>✓</span> <span>Compliant</span>
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Recent Inspections Ledger Table */}
-      <div className="content-card mt-4">
-        <div className="card-header-flex">
+      {/* RECENT INSPECTIONS AUDIT AREA */}
+      <div className="bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
+        <div className="flex items-center justify-between">
           <div>
-            <h3 className="card-title">Recent Inspection Audits</h3>
-            <span className="card-subtitle">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+              Recent Inspection Audits
+            </h3>
+            <p className="text-[11px] text-slate-400">
               Latest packaging verifications conducted in Zone 4
-            </span>
+            </p>
           </div>
-          <Link to="/history" className="link-view-all">
+          <Link
+            to="/history"
+            className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 transition-colors"
+          >
             <span>View All Inspections History</span>
-            <ArrowRight size={14} />
+            <ArrowRight size={13} />
           </Link>
         </div>
 
