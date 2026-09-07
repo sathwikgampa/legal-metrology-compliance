@@ -43,55 +43,55 @@ export default function InspectionTable({ inspections = [], emptyMessage = "No i
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+    <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
       <table className="w-full text-left text-xs border-collapse">
-        <thead className="bg-slate-50 border-b border-slate-200 dark:bg-slate-800/60 dark:border-slate-800 text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <thead className="bg-slate-50 border-b border-slate-200 dark:bg-slate-800/80 dark:border-slate-700 text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
           <tr>
-            <th className="py-2.5 px-3">Docket ID</th>
-            <th className="py-2.5 px-3">Commodity / Product</th>
-            <th className="py-2.5 px-3">Category</th>
-            <th className="py-2.5 px-3">Compliance Status</th>
-            <th className="py-2.5 px-3">Confidence</th>
-            <th className="py-2.5 px-3">Officer Sign-off</th>
-            <th className="py-2.5 px-3">Audit Date</th>
-            <th className="py-2.5 px-3 text-right">Action</th>
+            <th className="py-3 px-3.5">Docket ID</th>
+            <th className="py-3 px-3.5">Commodity / Product</th>
+            <th className="py-3 px-3.5">Category</th>
+            <th className="py-3 px-3.5">Compliance Status</th>
+            <th className="py-3 px-3.5">Confidence</th>
+            <th className="py-3 px-3.5">Officer Sign-off</th>
+            <th className="py-3 px-3.5">Audit Date</th>
+            <th className="py-3 px-3.5 text-right">Action</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300">
           {inspections.map((item) => (
-            <tr key={item.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-              <td className="py-2.5 px-3 font-mono font-medium">
-                <Link to={`/inspections/${item.id}`} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold">
+            <tr key={item.id} className="hover:bg-slate-50/90 dark:hover:bg-slate-800/50 transition-colors">
+              <td className="py-3 px-3.5 font-mono font-medium">
+                <Link to={`/inspections/${item.id}`} className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-bold">
                   {item.id}
                 </Link>
               </td>
-              <td className="py-2.5 px-3">
-                <div className="font-medium text-slate-800 dark:text-slate-200">{item.product_name}</div>
+              <td className="py-3 px-3.5">
+                <div className="font-semibold text-slate-800 dark:text-slate-100">{item.product_name}</div>
                 {item.images_count && (
-                  <span className="text-[10px] text-slate-400 block">📷 {item.images_count} image(s)</span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">📷 {item.images_count} image(s)</span>
                 )}
               </td>
-              <td className="py-2.5 px-3">
-                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              <td className="py-3 px-3.5">
+                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700">
                   {item.category}
                 </span>
               </td>
-              <td className="py-2.5 px-3">
+              <td className="py-3 px-3.5">
                 <ComplianceStatus status={item.status} size="sm" />
               </td>
-              <td className="py-2.5 px-3">
+              <td className="py-3 px-3.5">
                 <ConfidenceBadge value={item.confidence} size="sm" showLabel={false} />
               </td>
-              <td className="py-2.5 px-3">
+              <td className="py-3 px-3.5">
                 {renderOfficerDecision(item.officer_decision)}
               </td>
-              <td className="py-2.5 px-3 text-slate-400 text-[11px]">
+              <td className="py-3 px-3.5 text-slate-400 text-[11px]">
                 {item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Recent'}
               </td>
-              <td className="py-2.5 px-3 text-right">
+              <td className="py-3 px-3.5 text-right">
                 <Link
                   to={`/inspections/${item.id}`}
-                  className="inline-flex items-center px-2 py-1 border border-slate-200 text-slate-600 rounded text-[11px] font-medium bg-white hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+                  className="inline-flex items-center px-2.5 py-1 border border-slate-200 text-slate-700 rounded text-[11px] font-semibold bg-white hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 shadow-xs transition-colors"
                 >
                   View Audit →
                 </Link>

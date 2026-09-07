@@ -44,16 +44,16 @@ export default function DashboardCards({ stats }) {
       {cards.map((card) => (
         <div
           key={card.id}
-          className="bg-white border border-slate-100 p-4 rounded-xl shadow-xs dark:bg-slate-900 dark:border-slate-800/80 transition-colors"
+          className="bg-white border border-slate-200 p-4 rounded-xl shadow-sm hover:shadow transition-all dark:bg-slate-900 dark:border-slate-800"
         >
-          <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-1">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold mb-1">
             <span>{card.title}</span>
-            <span className={`w-1.5 h-1.5 rounded-full ${card.dotColor}`} />
+            <span className={`w-2 h-2 rounded-full ${card.dotColor}`} />
           </div>
-          <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight my-1">
             {card.value}
           </div>
-          <p className="text-[10px] text-slate-400 mt-1 leading-normal">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
             {card.helperText}
           </p>
         </div>

@@ -127,7 +127,7 @@ export default function DashboardPage() {
       {/* MAIN INTERFACE DATA GRID Split (2/3 and 1/3) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Side: Status Distribution Data Graphic (2/3 Width) */}
-        <div className="lg:col-span-2 bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-6 flex flex-col justify-between transition-colors">
+        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-6 flex flex-col justify-between transition-colors">
           <div>
             <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
               Compliance Status Distribution
@@ -162,23 +162,23 @@ export default function DashboardPage() {
             {/* Clean Legend */}
             <div className="grid grid-cols-3 gap-2 text-xs">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                 <div>
-                  <div className="font-medium text-slate-700 dark:text-slate-300">Emerald Green</div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-200">Emerald Green</div>
                   <div className="text-[10px] text-slate-400">Compliant ({compliantPct}%)</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
                 <div>
-                  <div className="font-medium text-slate-700 dark:text-slate-300">Soft Crimson</div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-200">Soft Crimson</div>
                   <div className="text-[10px] text-slate-400">Violations ({violationPct}%)</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
                 <div>
-                  <div className="font-medium text-slate-700 dark:text-slate-300">Warm Amber</div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-200">Warm Amber</div>
                   <div className="text-[10px] text-slate-400">Needs Review ({reviewPct}%)</div>
                 </div>
               </div>
@@ -187,14 +187,14 @@ export default function DashboardPage() {
 
           {/* Statutory Advisory Box */}
           {!alertDismissed && (
-            <div className="bg-blue-50/60 border border-blue-100 rounded-lg p-3.5 flex items-start justify-between dark:bg-blue-950/20 dark:border-blue-900/40 mt-4 transition-colors">
+            <div className="bg-blue-50/80 border border-blue-200 rounded-lg p-3.5 flex items-start justify-between dark:bg-blue-950/30 dark:border-blue-800/60 mt-4 transition-colors">
               <div className="flex space-x-2.5 pr-4">
                 <span className="text-blue-600 dark:text-blue-400 text-sm select-none">ℹ️</span>
                 <div>
                   <h4 className="text-xs font-bold text-blue-900 dark:text-blue-200">
                     Statutory Enforcement Advisory
                   </h4>
-                  <p className="text-[11px] text-blue-700/80 dark:text-blue-300/70 mt-0.5 leading-relaxed">
+                  <p className="text-[11px] text-blue-800/90 dark:text-blue-300/80 mt-0.5 leading-relaxed">
                     Packages flagged with potential violations require formal notice issuance under Rule 32. Packages under review warrant secondary visual verification before formal compounding.
                   </p>
                 </div>
@@ -213,7 +213,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Right Side: Category Audit Breakdown (1/3 Width) */}
-        <div className="bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
+        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
           <div>
             <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
               Category Audit Breakdown
@@ -224,7 +224,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Product Rows with subtle dividers */}
-          <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
             {(stats?.category_breakdown || [
               { category: 'Food & Grains', count: 5, violations: 1 },
               { category: 'Snacks', count: 1, violations: 1 },
@@ -237,11 +237,11 @@ export default function DashboardPage() {
                   <div className="text-[10px] text-slate-400">{cat.count} package{cat.count === 1 ? '' : 's'} audited</div>
                 </div>
                 {cat.violations > 0 ? (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-100 dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400 flex items-center space-x-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400 flex items-center space-x-1">
                     <span>⚠️</span> <span>{cat.violations} Non-Compliant</span>
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-400 flex items-center space-x-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-400 flex items-center space-x-1">
                     <span>✓</span> <span>Compliant</span>
                   </span>
                 )}
@@ -252,7 +252,7 @@ export default function DashboardPage() {
       </div>
 
       {/* RECENT INSPECTIONS AUDIT AREA */}
-      <div className="bg-white border border-slate-100 rounded-xl p-5 dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800 space-y-4 transition-colors">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
@@ -264,7 +264,7 @@ export default function DashboardPage() {
           </div>
           <Link
             to="/history"
-            className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 transition-colors"
+            className="text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center space-x-1 transition-colors"
           >
             <span>View All Inspections History</span>
             <ArrowRight size={13} />
