@@ -1,0 +1,50 @@
+# Legal Metrology Mandatory Declaration Patterns
+# Used by declaration_extractor.py to identify mandatory package declarations from OCR text.
+
+fields:
+  - id: MRP
+    name: Maximum Retail Price
+    patterns:
+      - '(?i)(?:mrp|max(?:imum)?\s*retail\s*price)\s*[:\-]?\s*(?:rs\.?|₹|inr)?\s*(\d+(?:\.\d{1,2})?)'
+      - '(?i)(?:rs\.?|₹|inr)\s*(\d+(?:\.\d{1,2})?)'
+    normalize: currency
+    required: true
+
+  - id: NET_QUANTITY
+    name: Net Quantity
+    patterns:
+      - '(?i)(?:net\s*(?:qty|quantity|wt|weight|vol|volume)?)\s*[:\-]?\s*(\d+(?:\.\d+)?\s*(?:g|kg|gm|gms|ml|l|ltr|litres|liter|n|pcs|pieces|units))\b'
+      - '(?i)\b(\d+(?:\.\d+)?\s*(?:g|kg|gm|gms|ml|l|ltr|litres|liter|pcs))\b'
+    normalize: weight_volume
+    required: true
+
+  - id: MANUFACTURER
+    name: Manufacturer / Packer / Marketer
+    patterns:
+      - '(?i)(?:mfd\.?\s*by|manufactured\s*by|packed\s*by|mktd\.?\s*by|marketed\s*by|produced\s*by|mfg\s*by)\s*[:\-]?\s*(.+)'
+      - '(?i)(?:packer|manufacturer)\s*[:\-]?\s*(.+)'
+    normalize: text
+    required: true
+
+  - id: CONSUMER_CARE
+    name: Consumer Care Details
+    patterns:
+      - '(?i)(?:consumer\s*care|customer\s*care|care\s*cell|helpline|toll\s*free)\s*[:\-]?\s*(.+)'
+      - '(?i)(?:email|contact|phone)\s*[:\-]?\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|\d{3,}[-\s]?\d{3,}[-\s]?\d{3,})'
+    normalize: text
+    required: true
+
+  - id: COUNTRY_OF_ORIGIN
+    name: Country of Origin
+    patterns:
+      - '(?i)(?:country\s*of\s*origin|made\s*in|product\s*of)\s*[:\-]?\s*([a-zA-Z\s]+)'
+    normalize: text
+    required: false
+    applies_to: [IMPORTED]
+
+  - id: MFG_DATE
+    name: Date of Manufacture / Import / Packing
+    patterns:
+      - '(?i)(?:mfg\.?\s*date|pkd\.?\s*date|packed\s*on|date\s*of\s*mfg|date\s*of\s*packing)\s*[:\-]?\s*(\d{2}[/\.-]\d{2}[/\.-]\d{2,4}|\d{2}[/\.-]\d{4}|[a-zA-Z]{3}\s*\d{4})'
+    normalize: text
+    required: true

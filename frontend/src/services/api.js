@@ -126,6 +126,56 @@ export async function analyzeInspection(inspectionId) {
   const record = inMemoryInspections[inspectionId];
   if (!record) throw new Error(`Inspection docket ${inspectionId} not found.`);
 
+  // Attempt live integration with CV Service (8001) & Backend API (8000)
+  try {
+    const defaultImgObj = record.uploaded_images[0];
+    let ocrPayload = null;
+
+    if (defaultImgObj && defaultImgObj.file) {
+      const formData = new FormData();
+      formData.append("file", defaultImgObj.file);
+      formData.append("product_id", inspectionId);
+
+      const ocrRes = await fetch("http://localhost:8001/ocr/extract", {
+        method: "POST",
+        body: formData
+      });
+      if (ocrRes.ok) {
+        ocrPayload = await ocrRes.json();
+      }
+    }
+
+    // Call backend analyze route to evaluate rules & persist to SQLite DB
+    const backendRes = await fetch("http://localhost:8000/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_name: record.product.name,
+        ocr_result: ocrPayload ? ocrPayload.ocr_result : null,
+        confidence: ocrPayload?.image_quality?.score || 0.95,
+        product_profile: {
+          product_name: record.product.name,
+          manufacturer: record.product.brand,
+          net_quantity: record.product.declared_net_quantity || "500 g",
+          mrp: record.product.mrp || "₹199",
+          country_of_origin: "India",
+          consumer_care: ""
+        }
+      })
+    });
+
+    if (backendRes.ok) {
+      const dbData = await backendRes.json();
+      record.db_inspection_id = dbData.inspection_id;
+      if (dbData.compliance_result) {
+        record.overall_status = dbData.compliance_result.overall_status || "POTENTIAL_VIOLATION";
+        record.overall_confidence = dbData.compliance_result.overall_confidence || 0.91;
+      }
+    }
+  } catch (err) {
+    console.warn("Live backend/cv-service not reachable. Operating in fallback mock mode.", err);
+  }
+
   // If already populated from a mock preset, return as is
   if (record.extracted_declarations && record.extracted_declarations.length > 0) {
     return record;

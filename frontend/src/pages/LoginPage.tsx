@@ -1,196 +1,314 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Scale, Lock, Shield } from 'lucide-react';
+import React, { useState, useEffect } from "react"
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
+import { useTheme } from "../context/ThemeContext"
+import {
+  Shield,
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Sun,
+  Moon,
+  Scale,
+} from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator"
 
-export default function LoginPage() {
-  const navigate = useNavigate();
-  const [officerId, setOfficerId] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+export default function LoginPage(): React.JSX.Element {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { login, isAuthenticated, isLoading: authLoading, error: authError, clearError } = useAuth()
+  const { isDarkMode, toggleTheme } = useTheme()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!officerId.trim() || !password.trim()) {
-      setError('Please enter a valid Officer ID and password.');
-      return;
+  const [identifier, setIdentifier] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [rememberMe, setRememberMe] = useState<boolean>(true)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [clientError, setClientError] = useState<string | null>(null)
+  const [registrationMessage, setRegistrationMessage] = useState<string | null>(null)
+
+  // Check if routed from registration page with success state
+  useEffect(() => {
+    const state = location.state as any
+    if (state?.registrationSuccess) {
+      setRegistrationMessage(
+        state.message || "Officer account created successfully. Please sign in with your credentials."
+      )
+      if (state.email) {
+        setIdentifier(state.email)
+      }
     }
-    setError(null);
-    // Simulate successful sign-in
-    navigate('/');
-  };
+  }, [location.state])
 
-  const handleSocialLogin = (provider: string) => {
-    setError(null);
-    navigate('/');
-  };
+  // If already authenticated, redirect to destination or dashboard
+  if (isAuthenticated && !authLoading) {
+    const destination = (location.state as any)?.from?.pathname || "/"
+    return <Navigate to={destination} replace />
+  }
+
+  const validateForm = (): boolean => {
+    if (!identifier.trim()) {
+      setClientError("Please enter your official email or username.")
+      return false
+    }
+    if (!password) {
+      setClientError("Please enter your password.")
+      return false
+    }
+    setClientError(null)
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    clearError()
+    setRegistrationMessage(null)
+
+    if (!validateForm()) return
+
+    setIsSubmitting(true)
+    const result = await login({
+      identifier: identifier.trim(),
+      password,
+      rememberMe,
+    })
+
+    setIsSubmitting(false)
+
+    if (result.success) {
+      const destination = (location.state as any)?.from?.pathname || "/"
+      navigate(destination, { replace: true })
+    }
+  }
+
+  const displayError = clientError || authError
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased">
-      
-      {/* Left Panel (60% width on Desktop) - Dark Charcoal/Navy Background */}
-      <div className="lg:w-[60%] w-full bg-slate-900 text-white p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden min-h-[320px] lg:min-h-screen">
-        
-        {/* Static Architecture Lines Pattern Background (No cartoon/stock photos) */}
-        <svg
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full opacity-10 pointer-events-none stroke-slate-400"
+    <div className="min-h-screen w-full flex flex-col bg-muted/20 text-foreground transition-colors selection:bg-primary/20">
+      {/* Government Branding Top Header */}
+      <header className="h-16 min-h-16 px-6 sm:px-8 flex items-center justify-between border-b border-border bg-card shadow-xs sticky top-0 z-30">
+        <div className="flex items-center space-x-3">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20 shrink-0">
+            <Scale className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-xs sm:text-sm font-bold tracking-tight text-foreground leading-tight">
+              Legal Metrology Inspection System
+            </h1>
+            <p className="text-[10px] text-muted-foreground font-medium">
+              Department of Consumer Affairs • Government of India
+            </p>
+          </div>
+        </div>
+
+        {/* Theme Switcher Button */}
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={toggleTheme}
+          className="h-8 w-8 rounded-md border-border text-foreground hover:bg-muted cursor-pointer"
+          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label="Toggle theme"
         >
-          <defs>
-            <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-        </svg>
+          {isDarkMode ? <Sun className="h-4 w-4 text-amber-500" /> : <Moon className="h-4 w-4" />}
+        </Button>
+      </header>
 
-        {/* Top-Left: Logo and Wordmark */}
-        <div className="relative z-10 space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md bg-white text-slate-900 flex items-center justify-center font-bold">
-              <Scale className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="font-bold text-base tracking-tight text-white">
-                Legal Metrology Directorate
+      {/* Centered Login Card */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 my-4">
+        <div className="w-full max-w-[440px]">
+          <Card className="rounded-xl border border-border bg-card shadow-sm p-6 sm:p-7">
+            <CardHeader className="p-0 pb-5 space-y-1.5 text-center">
+              <div className="mx-auto w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20 mb-1">
+                <Shield className="h-4 w-4 text-primary" />
               </div>
-              <div className="text-xs text-slate-400 font-medium">
-                Department of Consumer Affairs • Govt. of India
+              <CardTitle className="text-base font-bold tracking-tight text-foreground">
+                Statutory Officer Login
+              </CardTitle>
+              <CardDescription className="text-xs text-muted-foreground">
+                Sign in to access the Legal Metrology enforcement dashboard.
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="p-0 space-y-4">
+              {/* Registration Success Banner */}
+              {registrationMessage && (
+                <Alert className="py-2.5 px-3 text-xs border-emerald-500/40 bg-emerald-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <div className="flex-1 ml-2">
+                    <AlertTitle className="text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                      Account Created
+                    </AlertTitle>
+                    <AlertDescription className="text-[11px] text-emerald-800 dark:text-emerald-200 mt-0.5 leading-tight">
+                      {registrationMessage}
+                    </AlertDescription>
+                  </div>
+                </Alert>
+              )}
+
+              {/* Error Message Display */}
+              {displayError && (
+                <Alert
+                  variant="destructive"
+                  className="py-2.5 px-3 text-xs border-rose-500/30 bg-rose-500/10"
+                >
+                  <AlertCircle className="h-3.5 w-3.5 text-rose-500 shrink-0" />
+                  <div className="flex-1 ml-2">
+                    <AlertTitle className="text-xs font-bold text-rose-600 dark:text-rose-400">
+                      Authentication Failed
+                    </AlertTitle>
+                    <AlertDescription className="text-[11px] text-rose-700 dark:text-rose-300 mt-0.5 leading-tight">
+                      {displayError}
+                    </AlertDescription>
+                  </div>
+                </Alert>
+              )}
+
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Officer Email / Username Field */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="officer-identifier" className="text-xs font-medium text-foreground">
+                    Officer Email / Username
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="officer-identifier"
+                      type="text"
+                      placeholder="Enter your official email or username"
+                      value={identifier}
+                      onChange={(e) => {
+                        setIdentifier(e.target.value)
+                        if (clientError) setClientError(null)
+                        if (authError) clearError()
+                      }}
+                      className="pl-8 h-8 text-xs bg-muted/40 focus-visible:bg-background border-border"
+                      autoComplete="username"
+                      autoFocus
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field with Show/Hide Toggle */}
+                <div className="space-y-1.5">
+                  <Label htmlFor="officer-password" className="text-xs font-medium text-foreground">
+                    Security Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                    <Input
+                      id="officer-password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value)
+                        if (clientError) setClientError(null)
+                        if (authError) clearError()
+                      }}
+                      className="pl-8 pr-8 h-8 text-xs bg-muted/40 focus-visible:bg-background border-border"
+                      autoComplete="current-password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors focus:outline-none cursor-pointer"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember Me & Forgot Password Row */}
+                <div className="flex items-center justify-between pt-0.5">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="remember-me"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
+                    />
+                    <Label
+                      htmlFor="remember-me"
+                      className="text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors select-none font-normal"
+                    >
+                      Remember me
+                    </Label>
+                  </div>
+
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-medium text-primary hover:underline transition-colors focus:outline-none cursor-pointer"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+
+                {/* Primary Sign In Button */}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || authLoading}
+                  className="w-full h-8 font-semibold text-xs shadow-xs transition-colors mt-1 cursor-pointer"
+                >
+                  {isSubmitting || authLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                      <span>Signing In...</span>
+                    </>
+                  ) : (
+                    <span>Sign In</span>
+                  )}
+                </Button>
+              </form>
+
+              {/* New Officer Registration Option */}
+              <div className="text-center text-xs text-muted-foreground pt-1">
+                <span>New Officer? </span>
+                <Link
+                  to="/register"
+                  className="font-semibold text-primary hover:underline transition-colors focus:outline-none"
+                >
+                  Create an account
+                </Link>
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Center/Bottom: Institutional Tagline */}
-        <div className="relative z-10 max-w-lg my-12 lg:my-0 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 border border-slate-700 bg-slate-800/80 rounded-md text-xs text-slate-300 font-mono">
-            <Shield className="w-3.5 h-3.5 text-slate-400" />
-            Enforcement Portal v2.4
-          </div>
+              {/* Subtle Divider */}
+              <Separator className="my-3 bg-border/60" />
 
-          <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight text-white leading-tight">
-            Compliance enforcement under the Legal Metrology Act, 2009
-          </h1>
-
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Standardizing packaging declarations, net quantity verifications, and statutory compounding inspections across national consumer markets.
-          </p>
-        </div>
-
-        {/* Bottom Metadata Footer */}
-        <div className="relative z-10 text-xs text-slate-500 pt-6 border-t border-slate-800 flex items-center justify-between">
-          <span>Official Government Enforcement Authority</span>
-          <span className="font-mono">SECURE-SSL-256</span>
-        </div>
-      </div>
-
-      {/* Right Panel (40% width on Desktop) - White Background & Login Form */}
-      <div className="lg:w-[40%] w-full bg-white dark:bg-slate-950 p-8 lg:p-14 flex flex-col justify-center items-center">
-        <div className="w-full max-w-md space-y-6">
-          
-          {/* Header */}
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">
-              Officer sign in
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Enter your official credentials or authentication provider to access the inspection portal.
-            </p>
-          </div>
-
-          {/* Validation Status Error Message (Status colors only) */}
-          {error && (
-            <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/60 rounded-md text-xs text-rose-700 dark:text-rose-300 font-medium">
-              {error}
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1.5">
-              <label htmlFor="officerId" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Email or Officer ID
-              </label>
-              <input
-                id="officerId"
-                type="text"
-                value={officerId}
-                onChange={(e) => setOfficerId(e.target.value)}
-                placeholder="e.g. officer.sharma@gov.in or LM-8842"
-                className="w-full h-10 px-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-slate-100 transition-colors"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Password
-                </label>
+              {/* Statutory Notice */}
+              <div className="text-center space-y-0.5">
+                <p className="text-[11px] font-medium text-muted-foreground">
+                  Authorized personnel only
+                </p>
+                <p className="text-[10px] text-muted-foreground/80">
+                  Legal Metrology (Packaged Commodities) Rules, 2011
+                </p>
               </div>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full h-10 px-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-slate-100 transition-colors"
-              />
-            </div>
-
-            {/* Solid Black Primary Sign in Button */}
-            <button
-              type="submit"
-              className="w-full h-10 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-sm font-semibold rounded-md transition-colors cursor-pointer flex items-center justify-center gap-2"
-            >
-              <Lock className="w-4 h-4" />
-              Sign in
-            </button>
-          </form>
-
-          {/* Plain Divider */}
-          <div className="relative flex items-center justify-center my-4">
-            <div className="border-t border-slate-200 dark:border-slate-800 w-full" />
-            <span className="absolute bg-white dark:bg-slate-950 px-3 text-xs text-slate-500 dark:text-slate-400 font-medium">
-              or continue with
-            </span>
-          </div>
-
-          {/* Outlined Provider Social Login Buttons */}
-          <div className="space-y-2.5">
-            {/* Google Button */}
-            <button
-              type="button"
-              onClick={() => handleSocialLogin('Google')}
-              className="w-full h-10 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-md flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-current text-slate-700 dark:text-slate-300" viewBox="0 0 24 24">
-                <path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.21 5.39-7.84 5.39-4.72 0-8.58-3.92-8.58-8.74s3.86-8.74 8.58-8.74c2.69 0 4.49 1.15 5.52 2.14l2.6-2.6C18.96 1.84 16.03 1 12.48 1 6.27 1 1.28 5.98 1.28 12.18s4.99 11.18 11.2 11.18c6.48 0 10.77-4.56 10.77-10.96 0-.74-.08-1.31-.19-1.87h-10.58z" />
-              </svg>
-              Continue with Google
-            </button>
-
-            {/* Microsoft Button */}
-            <button
-              type="button"
-              onClick={() => handleSocialLogin('Microsoft')}
-              className="w-full h-10 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-md flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
-            >
-              <svg className="w-4 h-4 fill-current text-slate-700 dark:text-slate-300" viewBox="0 0 24 24">
-                <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z" />
-              </svg>
-              Continue with Microsoft
-            </button>
-          </div>
-
-          {/* Muted Legal Warning Footer */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-            <p className="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed">
-              Access restricted to authorized enforcement personnel. All sign-ins are logged.
-            </p>
-          </div>
-
+            </CardContent>
+          </Card>
         </div>
-      </div>
+      </main>
 
+      {/* Footer */}
+      <footer className="w-full py-3 px-6 text-center border-t border-border/40 bg-card/20">
+        <p className="text-[10px] text-muted-foreground">
+          Legal Metrology (Packaged Commodities) Rules, 2011 • Official Enforcement Portal
+        </p>
+      </footer>
     </div>
-  );
+  )
 }
