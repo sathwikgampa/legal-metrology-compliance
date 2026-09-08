@@ -361,13 +361,12 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#3A3A45]/60 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-      <div className="bg-[#FBFAFE] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-2xl shadow-[0_20px_50px_rgba(124,111,224,0.18)] max-w-4xl w-full overflow-hidden flex flex-col max-h-[92vh] transition-colors duration-200">
+    <div className="fixed inset-0 z-50 bg-[#3A3A45]/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
+      <div className="bg-[#FBFAFE] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] rounded-2xl shadow-[0_20px_50px_rgba(124,111,224,0.18)] max-w-4xl w-full overflow-hidden flex flex-col max-h-[92vh] transition-colors duration-200">
         
-        {/* Header Bar */}
-        <div className="bg-[#FBFAFE] dark:bg-[#1C1A2B] text-[#3A3A45] dark:text-[#ECE9F6] px-6 py-4 flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#2E2A44] shrink-0">
+        <div className="bg-[#FBFAFE] dark:bg-[#161424] text-[#3A3A45] dark:text-[#ECE9F6] px-6 py-4 flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#26223A] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#EDEBFB] dark:bg-[#2A2544] text-[#7C6FE0] dark:text-[#9589EC] rounded-xl shadow-xs">
+            <div className="p-2 bg-[#EDEBFB] dark:bg-[#221C38] text-[#7C6FE0] dark:text-[#9589EC] rounded-xl shadow-xs">
               <Scan className="w-5 h-5 animate-pulse" />
             </div>
             <div>
@@ -387,16 +386,14 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
 
           <button
             onClick={onClose}
-            className="p-1.5 text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#232035] rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C] rounded-lg transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Main Body */}
-        <div className="p-6 overflow-y-auto space-y-5 flex-1 bg-[#F8F7FC] dark:bg-[#13111C] transition-colors duration-200">
+        <div className="p-6 overflow-y-auto space-y-5 flex-1 bg-[#F8F7FC] dark:bg-[#0F0E17] transition-colors duration-200">
 
-          {/* Product Selection Chips */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[#3A3A45] dark:text-[#ECE9F6]">
               <Eye className="w-4 h-4 text-[#7C6FE0] dark:text-[#9589EC]" />
@@ -410,7 +407,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                     selectedProductIndex === idx
                       ? 'bg-[#7C6FE0] dark:bg-[#9589EC] text-white shadow-[0_2px_8px_rgba(124,111,224,0.3)]'
-                      : 'bg-[#FDFDFF] dark:bg-[#1C1A2B] text-[#6E6E80] dark:text-[#A29DB8] border border-[#E3E1F0] dark:border-[#2E2A44] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#232035]'
+                      : 'bg-[#FDFDFF] dark:bg-[#161424] text-[#6E6E80] dark:text-[#A29DB8] border border-[#E3E1F0] dark:border-[#26223A] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]'
                   }`}
                 >
                   {prod.name.split(" ")[0]} {prod.name.split(" ")[1]}
@@ -419,8 +416,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
             </div>
           </div>
 
-          {/* 4-SIDED PANEL SELECTOR STRIP */}
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-xl p-3 shadow-xs">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] rounded-xl p-3 shadow-xs">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-[#7C6FE0] dark:text-[#9589EC]" />
@@ -433,7 +429,6 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
               </span>
             </div>
 
-            {/* 4 Sides Tabs */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {SIDES_ORDER.map((sideKey, idx) => {
                 const spec = currentProduct.sides[sideKey];
@@ -446,16 +441,18 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                     onClick={() => setActiveSide(sideKey)}
                     className={`p-2.5 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between relative ${
                       isActive
-                        ? 'border-[#7C6FE0] dark:border-[#9589EC] bg-[#EDEBFB] dark:bg-[#2A2744] shadow-xs'
-                        : 'border-[#E3E1F0] dark:border-[#2E2C42] bg-[#FBFAFE] dark:bg-[#1A1926] hover:bg-[#F2F1F9] dark:hover:bg-[#222132]'
+                        ? 'border-[#7C6FE0] dark:border-[#9589EC] bg-[#EDEBFB] dark:bg-[#221C38] shadow-xs'
+                        : 'border-[#E3E1F0] dark:border-[#26223A] bg-[#FBFAFE] dark:bg-[#161424] hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-[#6E6E80] dark:text-[#A6A4B8]">
+                      <span className={`text-[10px] font-mono font-bold uppercase ${
+                        isActive ? 'text-[#7C6FE0] dark:text-[#9589EC]' : 'text-[#6E6E80] dark:text-[#A29DB8]'
+                      }`}>
                         SIDE {idx + 1}
                       </span>
                       {isCaptured ? (
-                        <span className="inline-flex items-center gap-1 bg-[#8FD9B6] text-[#2F7A55] text-[9px] font-bold px-1.5 py-0.2 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#2F7A55] dark:text-[#8FD9B6] bg-[#8FD9B6]/20 px-1.5 py-0.5 rounded-full">
                           <Check className="w-2.5 h-2.5" />
                           Done
                         </span>
@@ -463,7 +460,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                         <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700" />
                       )}
                     </div>
-                    <div className="font-bold text-xs text-[#3A3A45] dark:text-[#ECEBF5] mt-1.5 leading-snug truncate">
+                    <div className="font-bold text-xs text-[#3A3A45] dark:text-[#ECE9F6] mt-1.5 leading-snug truncate">
                       {sideKey === "FRONT" && "1. Front (Net Qty)"}
                       {sideKey === "BACK" && "2. Back (MRP & Dates)"}
                       {sideKey === "LEFT" && "3. Left (Manufacturer)"}
@@ -475,10 +472,8 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
             </div>
           </div>
 
-          {/* Scanner Viewfinder / Camera Display */}
-          <div className="relative bg-[#2D2A3B] rounded-2xl overflow-hidden aspect-video border border-[#E3E1F0] dark:border-[#2E2C42] shadow-inner flex items-center justify-center group">
+          <div className="relative bg-[#2D2A3B] rounded-2xl overflow-hidden aspect-video border border-[#E3E1F0] dark:border-[#26223A] shadow-inner flex items-center justify-center group">
             
-            {/* Background Feed (Webcam or Authentic High-Res Real Packaging Photo) */}
             {webcamAvailable && !isCurrentSideCaptured ? (
               <video
                 ref={videoRef}
@@ -491,30 +486,25 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
               <img
                 src={currentProduct.image}
                 alt="Scanner Viewfinder Feed"
-                className="w-full h-full object-contain bg-[#1F1D2B] opacity-95 transition-all duration-300"
+                className="w-full h-full object-contain bg-[#12111A] opacity-95 transition-all duration-300"
               />
             )}
 
-            {/* Grid Overlay */}
             {gridVisible && (
               <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
             )}
 
-            {/* Soft Indigo Laser Scanner Line Animation */}
             {isScanningActive && (
               <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#7C6FE0] to-transparent shadow-[0_0_20px_#7C6FE0] animate-bounce pointer-events-none top-1/4 duration-1000" />
             )}
 
-            {/* Viewfinder Reticle Box */}
             <div className="absolute inset-8 sm:inset-12 border-2 border-[#7C6FE0]/50 rounded-xl pointer-events-none flex flex-col justify-between p-3">
-              {/* Corner Brackets */}
               <div className="flex justify-between">
                 <div className="w-6 h-6 border-t-4 border-l-4 border-[#7C6FE0] -mt-1 -ml-1 rounded-tl-sm" />
                 <div className="w-6 h-6 border-t-4 border-r-4 border-[#7C6FE0] -mt-1 -mr-1 rounded-tr-sm" />
               </div>
 
-              {/* Status Banner inside Viewfinder */}
-              <div className="self-center bg-[#FBFAFE]/95 dark:bg-[#1A1926]/95 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#E3E1F0] dark:border-[#2E2C42] text-[#3A3A45] dark:text-[#ECEBF5] text-xs font-semibold flex items-center gap-2 shadow-lg">
+              <div className="self-center bg-[#FBFAFE]/95 dark:bg-[#161424]/95 backdrop-blur-md px-4 py-1.5 rounded-full border border-[#E3E1F0] dark:border-[#26223A] text-[#3A3A45] dark:text-[#ECE9F6] text-xs font-semibold flex items-center gap-2 shadow-lg">
                 <span className="w-2 h-2 rounded-full bg-[#8FD9B6] animate-ping" />
                 {isCurrentSideCaptured ? (
                   <span className="text-[#2F7A55] dark:text-[#8FD9B6]">
@@ -533,13 +523,12 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
               </div>
             </div>
 
-            {/* OCR Bounding Boxes Visualizer overlay when current side is captured */}
             {isCurrentSideCaptured && (
               <div className="absolute inset-0 p-8 flex flex-wrap gap-2 items-start pointer-events-none animate-in fade-in zoom-in duration-300">
                 {currentSideSpec.ocr.map((box, i) => (
                   <div
                     key={i}
-                    className="bg-[#FBFAFE]/95 dark:bg-[#1A1926]/95 backdrop-blur-xs border border-[#7C6FE0] dark:border-[#9589EC] text-[#3A3A45] dark:text-[#ECEBF5] text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-md"
+                    className="bg-[#FBFAFE]/95 dark:bg-[#161424]/95 backdrop-blur-xs border border-[#7C6FE0] dark:border-[#9589EC] text-[#3A3A45] dark:text-[#ECE9F6] text-[10px] font-mono font-bold px-2.5 py-1 rounded-md shadow-md"
                   >
                     🔍 {box.label}: <span className="text-[#7C6FE0] dark:text-[#9589EC]">{box.text}</span> ({Math.round(box.confidence * 100)}%)
                   </div>
@@ -547,9 +536,8 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
               </div>
             )}
 
-            {/* HUD Top Bar Controls */}
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between text-[#3A3A45] text-xs z-10">
-              <div className="flex items-center gap-2 bg-[#FBFAFE]/90 dark:bg-[#1C1A2B]/90 backdrop-blur-md px-3 py-1 rounded-lg border border-[#E3E1F0] dark:border-[#2E2A44] shadow-xs">
+              <div className="flex items-center gap-2 bg-[#FBFAFE]/90 dark:bg-[#161424]/90 backdrop-blur-md px-3 py-1 rounded-lg border border-[#E3E1F0] dark:border-[#26223A] shadow-xs">
                 <span className="font-mono text-[#2F7A55] dark:text-[#8FD9B6] font-bold">LIVE OCR ACTIVE</span>
                 <span className="text-[#6E6E80] dark:text-[#A29DB8]">|</span>
                 <span className="text-[#6E6E80] dark:text-[#A29DB8] font-mono text-[11px] uppercase">{activeSide} PANEL</span>
@@ -562,7 +550,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                   className={`p-2 rounded-lg border backdrop-blur-md transition-colors cursor-pointer shadow-xs ${
                     flashEnabled
                       ? 'bg-[#F5D08A]/30 text-[#8A6416] border-[#F5D08A]'
-                      : 'bg-[#FBFAFE]/90 dark:bg-[#1A1926]/90 text-[#6E6E80] dark:text-[#A6A4B8] border-[#E3E1F0] dark:border-[#2E2C42]'
+                      : 'bg-[#FBFAFE]/90 dark:bg-[#161424]/90 text-[#6E6E80] dark:text-[#A6A4B8] border-[#E3E1F0] dark:border-[#26223A]'
                   }`}
                   title="Toggle Flash"
                 >
@@ -574,8 +562,8 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                   onClick={() => setGridVisible(!gridVisible)}
                   className={`p-2 rounded-lg border backdrop-blur-md transition-colors cursor-pointer shadow-xs ${
                     gridVisible
-                      ? 'bg-[#EDEBFB] dark:bg-[#2A2744] text-[#7C6FE0] dark:text-[#9589EC] border-[#7C6FE0]'
-                      : 'bg-[#FBFAFE]/90 dark:bg-[#1A1926]/90 text-[#6E6E80] dark:text-[#A6A4B8] border-[#E3E1F0] dark:border-[#2E2C42]'
+                      ? 'bg-[#EDEBFB] dark:bg-[#221C38] text-[#7C6FE0] dark:text-[#9589EC] border-[#7C6FE0]'
+                      : 'bg-[#FBFAFE]/90 dark:bg-[#161424]/90 text-[#6E6E80] dark:text-[#A6A4B8] border-[#E3E1F0] dark:border-[#26223A]'
                   }`}
                   title="Toggle Grid"
                 >
@@ -584,13 +572,12 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
               </div>
             </div>
 
-            {/* Shutter Capture Button Overlay */}
             {!isCurrentSideCaptured ? (
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-10">
                 <button
                   type="button"
                   onClick={handleCaptureCurrentSide}
-                  className="w-16 h-16 rounded-full bg-[#FDFDFF] dark:bg-[#1F1E2E] text-[#7C6FE0] dark:text-[#9589EC] flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer ring-4 ring-[#7C6FE0]/40"
+                  className="w-16 h-16 rounded-full bg-[#FDFDFF] dark:bg-[#161424] text-[#7C6FE0] dark:text-[#9589EC] flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer ring-4 ring-[#7C6FE0]/40"
                   title={`Capture ${currentSideSpec.sideLabel}`}
                 >
                   <Camera className="w-7 h-7" />
@@ -601,7 +588,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                 <button
                   type="button"
                   onClick={handleRetakeCurrentSide}
-                  className="px-3.5 py-2 bg-[#FBFAFE]/95 dark:bg-[#1A1926]/95 text-[#3A3A45] dark:text-[#ECEBF5] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg text-xs font-semibold flex items-center gap-1.5 hover:bg-[#EDEBFB] hover:text-[#7C6FE0] transition-colors cursor-pointer shadow-md"
+                  className="px-3.5 py-2 bg-[#FBFAFE]/95 dark:bg-[#161424]/95 text-[#3A3A45] dark:text-[#ECE9F6] border border-[#E3E1F0] dark:border-[#26223A] rounded-lg text-xs font-semibold flex items-center gap-1.5 hover:bg-[#EDEBFB] hover:text-[#7C6FE0] transition-colors cursor-pointer shadow-md"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   Retake {activeSide}
@@ -610,33 +597,31 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
             )}
           </div>
 
-          {/* Captured Multi-Side Declarations Summary */}
           {capturedCount > 0 && (
-            <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-xs">
-              <div className="flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#2E2A44] pb-3">
+            <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] rounded-xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 shadow-xs">
+              <div className="flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#26223A] pb-3">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-[#7C6FE0] dark:text-[#9589EC]" />
                   <h3 className="text-sm font-bold text-[#3A3A45] dark:text-[#ECE9F6]">
                     Audited Declarations across Captured Sides ({capturedCount}/4 Panels)
                   </h3>
                 </div>
-                <span className="bg-[#EDEBFB] dark:bg-[#2A2544] text-[#7C6FE0] dark:text-[#9589EC] font-mono text-xs font-bold px-2.5 py-1 rounded-md">
+                <span className="bg-[#EDEBFB] dark:bg-[#221C38] text-[#7C6FE0] dark:text-[#9589EC] font-mono text-xs font-bold px-2.5 py-1 rounded-md">
                   {getAllExtractedOcr().length} Rule 6 Declarations
                 </span>
               </div>
 
-              {/* Verified OCR Fields List */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {getAllExtractedOcr().map((item, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-[#F2F1F9] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg text-xs space-y-1"
+                    className="p-3 bg-[#F2F1F9] dark:bg-[#1C192C] border border-[#E3E1F0] dark:border-[#26223A] rounded-lg text-xs space-y-1"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-[#6E6E80] dark:text-[#A29DB8] text-[11px]">
                         {item.label}
                       </span>
-                      <span className="text-[10px] font-mono font-bold text-[#2F7A55] dark:text-[#8FD9B6] bg-[#8FD9B6]/25 dark:bg-[#142E22] px-2 py-0.5 rounded-full border dark:border-[#1F4A36]">
+                      <span className="text-[10px] font-mono font-bold text-[#2F7A55] dark:text-[#8FD9B6] bg-[#8FD9B6]/25 dark:bg-[#0E2319] px-2 py-0.5 rounded-full border dark:border-[#163A29]">
                         {Math.round(item.confidence * 100)}% Match
                       </span>
                     </div>
@@ -647,14 +632,13 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                 ))}
               </div>
 
-              {/* Editable Product Info before Submission */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <div>
                   <Label className="text-xs font-semibold text-[#3A3A45] dark:text-[#ECE9F6]">Commodity Name</Label>
                   <Input
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
-                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#232035] border-[#E3E1F0] dark:border-[#2E2A44] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
+                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#1C192C] border-[#E3E1F0] dark:border-[#26223A] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
                   />
                 </div>
                 <div>
@@ -662,7 +646,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                   <Input
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
-                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#232035] border-[#E3E1F0] dark:border-[#2E2A44] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
+                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#1C192C] border-[#E3E1F0] dark:border-[#26223A] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
                   />
                 </div>
                 <div>
@@ -670,7 +654,7 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                   <Input
                     value={netQty}
                     onChange={(e) => setNetQty(e.target.value)}
-                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#232035] border-[#E3E1F0] dark:border-[#2E2A44] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
+                    className="h-9 text-xs mt-1 bg-[#FDFDFF] dark:bg-[#1C192C] border-[#E3E1F0] dark:border-[#26223A] text-[#3A3A45] dark:text-[#ECE9F6] focus:border-[#7C6FE0]"
                   />
                 </div>
               </div>
@@ -678,13 +662,12 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
           )}
         </div>
 
-        {/* Footer Actions */}
-        <div className="bg-[#FBFAFE] dark:bg-[#1C1A2B] border-t border-[#E3E1F0] dark:border-[#2E2A44] px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="bg-[#FBFAFE] dark:bg-[#161424] border-t border-[#E3E1F0] dark:border-[#26223A] px-6 py-4 flex items-center justify-between shrink-0">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
-            className="text-xs h-9 px-4 border-[#E3E1F0] dark:border-[#2E2A44] text-[#3A3A45] dark:text-[#ECE9F6] hover:bg-[#F2F1F9] dark:hover:bg-[#232035] cursor-pointer rounded-lg"
+            className="text-xs h-9 px-4 border-[#E3E1F0] dark:border-[#26223A] text-[#3A3A45] dark:text-[#ECE9F6] hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C] cursor-pointer rounded-lg"
           >
             Cancel
           </Button>

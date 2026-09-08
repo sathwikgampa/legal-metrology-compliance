@@ -35,12 +35,12 @@ export default function LoginPage(): React.JSX.Element {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F8F7FC] dark:bg-[#12111A] text-[#3A3A45] dark:text-[#ECEBF5] font-sans antialiased transition-colors duration-200 relative">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#F8F7FC] dark:bg-[#13111C] text-[#3A3A45] dark:text-[#ECE9F6] font-sans antialiased transition-colors duration-200 relative">
       {/* Top Right Dark/Light Mode Switcher */}
       <div className="absolute top-4 right-4 z-20">
         <button
           onClick={toggleTheme}
-          className="p-2.5 bg-[#FBFAFE] dark:bg-[#1A1926] border border-[#E3E1F0] dark:border-[#2E2C42] text-[#6E6E80] dark:text-[#A6A4B8] hover:text-[#7C6FE0] dark:hover:text-[#9589EC] rounded-full transition-colors cursor-pointer shadow-xs"
+          className="p-2.5 bg-[#FBFAFE] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#7C6FE0] rounded-full transition-colors cursor-pointer shadow-xs"
           title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           aria-label="Toggle theme"
         >
@@ -49,7 +49,7 @@ export default function LoginPage(): React.JSX.Element {
       </div>
 
       {/* Left Panel (50% Desktop) - Elegant Government Cadre Dossier */}
-      <div className="lg:w-[50%] w-full bg-[#FBFAFE] dark:bg-[#1A1926] border-r border-[#E3E1F0] dark:border-[#2E2C42] p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
+      <div className="lg:w-[50%] w-full bg-[#FBFAFE] dark:bg-[#1C1A2B] border-r border-[#E3E1F0] dark:border-[#2E2A44] p-8 lg:p-14 flex flex-col justify-between relative overflow-hidden transition-colors duration-200">
         {/* Subtle Decorative Background Pattern */}
         <div
           aria-hidden="true"
@@ -59,21 +59,21 @@ export default function LoginPage(): React.JSX.Element {
         {/* Top Header: Directorate & Emblem */}
         <div className="relative z-10 space-y-4">
           <Link to="/" className="inline-flex items-center gap-3 no-underline group">
-            <div className="w-10 h-10 rounded-xl bg-[#7C6FE0] dark:bg-[#9589EC] text-white flex items-center justify-center font-bold shadow-[0_4px_14px_rgba(124,111,224,0.3)] transition-transform group-hover:scale-105">
+            <div className="w-10 h-10 rounded-xl bg-[#7C6FE0] text-white flex items-center justify-center font-bold shadow-[0_4px_14px_rgba(124,111,224,0.3)] transition-transform group-hover:scale-105">
               <Scale className="w-5 h-5" />
             </div>
             <div>
-              <span className="font-bold text-lg text-[#3A3A45] dark:text-[#ECEBF5] tracking-tight block">
+              <span className="font-bold text-lg text-[#3A3A45] dark:text-[#ECE9F6] tracking-tight block">
                 Directorate of Legal Metrology
               </span>
-              <span className="text-[11px] font-mono text-[#6E6E80] dark:text-[#A6A4B8] tracking-wider uppercase">
+              <span className="text-[11px] font-mono text-[#6E6E80] dark:text-[#A29DB8] tracking-wider uppercase">
                 Govt. of India • Department of Consumer Affairs
               </span>
             </div>
           </Link>
 
           <div className="pt-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EDEBFB] dark:bg-[#2A2744] text-[#7C6FE0] dark:text-[#9589EC] border border-[#7C6FE0]/20 rounded-full text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EDEBFB] dark:bg-[#2A2544] text-[#7C6FE0] border border-[#7C6FE0]/20 rounded-full text-xs font-semibold">
               <Shield className="w-3.5 h-3.5" />
               <span>Packaged Commodities Rules, 2011 • Enforcement Cadre</span>
             </span>
@@ -82,70 +82,70 @@ export default function LoginPage(): React.JSX.Element {
 
         {/* Center: Mission & Statutory Authority */}
         <div className="relative z-10 max-w-lg my-10 lg:my-0 space-y-4">
-          <h1 className="text-2xl lg:text-3xl font-bold text-[#3A3A45] dark:text-[#ECEBF5] leading-tight tracking-tight">
+          <h1 className="text-2xl lg:text-3xl font-bold text-[#3A3A45] dark:text-[#ECE9F6] leading-tight tracking-tight">
             National statutory compliance portal for packaged commodity inspections.
           </h1>
-          <p className="text-xs text-[#6E6E80] dark:text-[#A6A4B8] leading-relaxed">
+          <p className="text-xs text-[#6E6E80] dark:text-[#A29DB8] leading-relaxed">
             Authorized portal for District Legal Metrology Officers, Central Controllers, and Inspection Cadres under Section 15 of the Legal Metrology Act, 2009. Automated optical verification guarantees tamper-proof evidentiary audit trails.
           </p>
 
           {/* Statutory Pillars Strip */}
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="p-3 bg-[#F2F1F9] dark:bg-[#12111A] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg space-y-1">
-              <div className="text-[11px] font-bold text-[#7C6FE0] dark:text-[#9589EC] uppercase">Rule 6 Mandate</div>
-              <div className="text-xs text-[#3A3A45] dark:text-[#ECEBF5] font-medium">Automatic 4-sided OCR declaration audits (MRP, Net Qty, Dates)</div>
+            <div className="p-3 bg-[#F2F1F9] dark:bg-[#13111C] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg space-y-1">
+              <div className="text-[11px] font-bold text-[#7C6FE0] uppercase">Rule 6 Mandate</div>
+              <div className="text-xs text-[#3A3A45] dark:text-[#ECE9F6] font-medium">Automatic 4-sided OCR declaration audits (MRP, Net Qty, Dates)</div>
             </div>
-            <div className="p-3 bg-[#F2F1F9] dark:bg-[#12111A] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg space-y-1">
+            <div className="p-3 bg-[#F2F1F9] dark:bg-[#13111C] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg space-y-1">
               <div className="text-[11px] font-bold text-[#5FC8B8] uppercase">Section 48 Recovery</div>
-              <div className="text-xs text-[#3A3A45] dark:text-[#ECEBF5] font-medium">Instant compounding penalty calculation & Rule 32 notices</div>
+              <div className="text-xs text-[#3A3A45] dark:text-[#ECE9F6] font-medium">Instant compounding penalty calculation & Rule 32 notices</div>
             </div>
           </div>
         </div>
 
         {/* Bottom Institutional Footer */}
-        <div className="relative z-10 text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] pt-4 border-t border-[#E3E1F0] dark:border-[#2E2C42] flex items-center justify-between font-mono">
+        <div className="relative z-10 text-[11px] text-[#6E6E80] dark:text-[#A29DB8] pt-4 border-t border-[#E3E1F0] dark:border-[#2E2A44] flex items-center justify-between font-mono">
           <span>CENTRAL TERMINAL • JURISDICTION DL-HQ</span>
-          <span className="text-[#8FD9B6] font-bold bg-[#8FD9B6]/15 px-2 py-0.5 rounded">
+          <span className="text-[#8FD9B6] font-bold bg-[#8FD9B6]/15 dark:bg-[#142E22] px-2 py-0.5 rounded border dark:border-[#1F4A36]">
             PORTAL STATUS: SECURE (TLS 1.3)
           </span>
         </div>
       </div>
 
       {/* Right Panel (50% Desktop) - Modern Clean Authentication Card */}
-      <div className="lg:w-[50%] w-full bg-[#F8F7FC] dark:bg-[#12111A] p-8 lg:p-14 flex flex-col justify-center items-center transition-colors duration-200">
-        <div className="w-full max-w-md bg-[#FDFDFF] dark:bg-[#1F1E2E] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-2xl p-8 shadow-[0_12px_32px_rgba(124,111,224,0.08)] space-y-6">
+      <div className="lg:w-[50%] w-full bg-[#F8F7FC] dark:bg-[#13111C] p-8 lg:p-14 flex flex-col justify-center items-center transition-colors duration-200">
+        <div className="w-full max-w-md bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-2xl p-8 shadow-[0_12px_32px_rgba(124,111,224,0.08)] space-y-6">
           {/* Header */}
           <div className="space-y-1">
-            <h2 className="text-xl font-bold tracking-tight text-[#3A3A45] dark:text-[#ECEBF5]">
+            <h2 className="text-xl font-bold tracking-tight text-[#3A3A45] dark:text-[#ECE9F6]">
               Officer Sign In
             </h2>
-            <p className="text-xs text-[#6E6E80] dark:text-[#A6A4B8]">
+            <p className="text-xs text-[#6E6E80] dark:text-[#A29DB8]">
               Authenticate to access the live statutory inspection ledger.
             </p>
           </div>
 
           {/* Quick Demo Credentials Bar */}
-          <div className="p-3 bg-[#F2F1F9] dark:bg-[#1A1926] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-bold text-[#6E6E80] dark:text-[#A6A4B8]">
+          <div className="p-3 bg-[#F2F1F9] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-bold text-[#6E6E80] dark:text-[#A29DB8]">
               <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#7C6FE0] dark:text-[#9589EC]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#7C6FE0]" />
                 <span>Instant Officer Demo Login:</span>
               </span>
-              <span className="text-[10px] text-[#7C6FE0] dark:text-[#9589EC]">1-Click Access</span>
+              <span className="text-[10px] text-[#7C6FE0]">1-Click Access</span>
             </div>
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickLogin("s.sharma@gov.in", "Inspector S. Sharma")}
-                className="flex-1 px-2.5 py-1.5 bg-[#FDFDFF] dark:bg-[#1F1E2E] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] border border-[#E3E1F0] dark:border-[#2E2C42] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5] hover:text-[#7C6FE0] rounded-md text-xs font-semibold transition-all cursor-pointer text-left flex items-center justify-between shadow-xs"
+                className="flex-1 px-2.5 py-1.5 bg-[#FDFDFF] dark:bg-[#1C1A2B] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2544] border border-[#E3E1F0] dark:border-[#2E2A44] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6] hover:text-[#7C6FE0] rounded-md text-xs font-semibold transition-all cursor-pointer text-left flex items-center justify-between shadow-xs"
               >
                 <span>S. Sharma (Inspector)</span>
-                <UserCheck className="w-3.5 h-3.5 text-[#7C6FE0] dark:text-[#9589EC]" />
+                <UserCheck className="w-3.5 h-3.5 text-[#7C6FE0]" />
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin("controller.hq@gov.in", "Central Controller")}
-                className="flex-1 px-2.5 py-1.5 bg-[#FDFDFF] dark:bg-[#1F1E2E] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] border border-[#E3E1F0] dark:border-[#2E2C42] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5] hover:text-[#7C6FE0] rounded-md text-xs font-semibold transition-all cursor-pointer text-left flex items-center justify-between shadow-xs"
+                className="flex-1 px-2.5 py-1.5 bg-[#FDFDFF] dark:bg-[#1C1A2B] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2544] border border-[#E3E1F0] dark:border-[#2E2A44] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6] hover:text-[#7C6FE0] rounded-md text-xs font-semibold transition-all cursor-pointer text-left flex items-center justify-between shadow-xs"
               >
                 <span>Central Controller</span>
                 <UserCheck className="w-3.5 h-3.5 text-[#5FC8B8]" />
@@ -163,7 +163,7 @@ export default function LoginPage(): React.JSX.Element {
           {/* Authentication Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label htmlFor="officerId" className="block text-xs font-semibold text-[#3A3A45] dark:text-[#ECEBF5]">
+              <label htmlFor="officerId" className="block text-xs font-semibold text-[#3A3A45] dark:text-[#ECE9F6]">
                 Officer ID / NIC Government Email
               </label>
               <input
@@ -172,12 +172,12 @@ export default function LoginPage(): React.JSX.Element {
                 value={officerId}
                 onChange={(e) => setOfficerId(e.target.value)}
                 placeholder="e.g. s.sharma@gov.in or INSP-LM-884"
-                className="w-full h-10 px-3.5 bg-[#FDFDFF] dark:bg-[#1A1926] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg text-xs text-[#3A3A45] dark:text-[#ECEBF5] placeholder-[#6E6E80] dark:placeholder-[#7E7C90] focus:outline-none focus:border-[#7C6FE0] focus:ring-2 focus:ring-[#7C6FE0]/20 transition-all shadow-xs"
+                className="w-full h-10 px-3.5 bg-[#FDFDFF] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg text-xs text-[#3A3A45] dark:text-[#ECE9F6] placeholder-[#6E6E80] dark:placeholder-[#A29DB8] focus:outline-none focus:border-[#7C6FE0] focus:ring-2 focus:ring-[#7C6FE0]/20 transition-all shadow-xs"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="password" className="block text-xs font-semibold text-[#3A3A45] dark:text-[#ECEBF5]">
+              <label htmlFor="password" className="block text-xs font-semibold text-[#3A3A45] dark:text-[#ECE9F6]">
                 Password / Statutory Key
               </label>
               <input
@@ -186,7 +186,7 @@ export default function LoginPage(): React.JSX.Element {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full h-10 px-3.5 bg-[#FDFDFF] dark:bg-[#1A1926] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg text-xs text-[#3A3A45] dark:text-[#ECEBF5] placeholder-[#6E6E80] dark:placeholder-[#7E7C90] focus:outline-none focus:border-[#7C6FE0] focus:ring-2 focus:ring-[#7C6FE0]/20 transition-all shadow-xs"
+                className="w-full h-10 px-3.5 bg-[#FDFDFF] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg text-xs text-[#3A3A45] dark:text-[#ECE9F6] placeholder-[#6E6E80] dark:placeholder-[#A29DB8] focus:outline-none focus:border-[#7C6FE0] focus:ring-2 focus:ring-[#7C6FE0]/20 transition-all shadow-xs"
               />
             </div>
 
@@ -203,8 +203,8 @@ export default function LoginPage(): React.JSX.Element {
 
           {/* Divider */}
           <div className="relative flex items-center justify-center my-4">
-            <div className="border-t border-[#E3E1F0] dark:border-[#2E2C42] w-full" />
-            <span className="absolute bg-[#FDFDFF] dark:bg-[#1F1E2E] px-3 text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] font-medium">
+            <div className="border-t border-[#E3E1F0] dark:border-[#2E2A44] w-full" />
+            <span className="absolute bg-[#FDFDFF] dark:bg-[#1C1A2B] px-3 text-[11px] text-[#6E6E80] dark:text-[#A29DB8] font-medium">
               or authenticate via
             </span>
           </div>
@@ -213,15 +213,15 @@ export default function LoginPage(): React.JSX.Element {
           <button
             type="button"
             onClick={handleSsoLogin}
-            className="w-full h-10 border border-[#E3E1F0] dark:border-[#2E2C42] bg-[#FDFDFF] dark:bg-[#1A1926] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5] hover:text-[#7C6FE0] text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+            className="w-full h-10 border border-[#E3E1F0] dark:border-[#2E2A44] bg-[#FDFDFF] dark:bg-[#232035] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2544] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6] hover:text-[#7C6FE0] text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
           >
-            <Scale className="w-3.5 h-3.5 text-[#7C6FE0] dark:text-[#9589EC]" />
+            <Scale className="w-3.5 h-3.5 text-[#7C6FE0]" />
             <span>Government Parichay / Jan Parichay SSO</span>
           </button>
 
           {/* Statutory Legal Warning Notice */}
-          <div className="p-3 bg-[#F2F1F9] dark:bg-[#1A1926] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] leading-relaxed">
-            <strong className="text-[#3A3A45] dark:text-[#ECEBF5] font-semibold block mb-0.5">
+          <div className="p-3 bg-[#F2F1F9] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg text-[11px] text-[#6E6E80] dark:text-[#A29DB8] leading-relaxed">
+            <strong className="text-[#3A3A45] dark:text-[#ECE9F6] font-semibold block mb-0.5">
               STATUTORY WARNING (SECTION 15):
             </strong>
             This enforcement terminal is restricted to authorized officers. Access is monitored and tamper-proof logs are recorded under Section 65B of the Indian Evidence Act.
