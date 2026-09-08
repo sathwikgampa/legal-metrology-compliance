@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ImageUpload, { UploadedSlotItem } from '@/components/ImageUpload';
 import AnalysisProgress, { ANALYSIS_STEPS } from '@/components/AnalysisProgress';
 import ErrorState from '@/components/ErrorState';
+import OfficerScannerModal from '@/components/OfficerScannerModal';
 import { createInspection, uploadImages, analyzeInspection } from '@/services/api';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -13,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { BlurText } from '@/components/react-bits/BlurText';
 import { MagneticButton } from '@/components/react-bits/MagneticButton';
-import { Sparkles, ArrowLeft, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Sparkles, ArrowLeft, ArrowRight, ShieldCheck, Camera, Scan, CheckCircle2 } from 'lucide-react';
 
 const CATEGORIES = [
   'Food & Grains',
@@ -39,27 +40,62 @@ export default function NewInspectionPage() {
   const [uploadedSlots, setUploadedSlots] = useState<Record<string, UploadedSlotItem>>({});
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  // Officer Scanner Modal State
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [scannedNotification, setScannedNotification] = useState<string | null>(null);
+
   // Analysis State
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [generalError, setGeneralError] = useState<string | null>(null);
 
+  const handleScanComplete = (scannedData: {
+    photoUrl: string;
+    productName: string;
+    brand: string;
+    declaredNetQty: string;
+  }) => {
+    setProductName(scannedData.productName);
+    setBrand(scannedData.brand);
+    setDeclaredNetQty(scannedData.declaredNetQty);
+
+    // Convert scanned photo image URL into front & back slot previews
+    fetch(scannedData.photoUrl)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const frontFile = new File([blob], 'scanned_front_panel.jpg', { type: 'image/jpeg' });
+        const backFile = new File([blob], 'scanned_back_panel.jpg', { type: 'image/jpeg' });
+
+        setUploadedSlots({
+          front: {
+            slotKey: 'front',
+            file: frontFile,
+            previewUrl: scannedData.photoUrl
+          },
+          back: {
+            slotKey: 'back',
+            file: backFile,
+            previewUrl: scannedData.photoUrl
+          }
+        });
+
+        setScannedNotification(`Captured product photo for "${scannedData.productName}". Front & back declaration evidence loaded.`);
+      })
+      .catch(() => {
+        setScannedNotification(`Scanned metadata captured for "${scannedData.productName}".`);
+      });
+  };
+
   const handleStartAnalysis = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Validate Form & Required Slots
     if (!productName.trim()) {
       setUploadError('Product / Commodity Name is required.');
       return;
     }
 
     if (!uploadedSlots.front) {
-      setUploadError('Primary Front Panel image is mandatory for inspection.');
-      return;
-    }
-
-    if (!uploadedSlots.back) {
-      setUploadError('Information / Back Panel image is mandatory to audit mandatory declarations.');
+      setUploadError('Primary Front Panel image or Scanned Photo is required.');
       return;
     }
 
@@ -68,17 +104,15 @@ export default function NewInspectionPage() {
     setIsAnalyzing(true);
 
     try {
-      // Step 0: Images uploaded
       setCurrentStepIndex(0);
       const newRecord = await createInspection({
         name: productName,
         brand: brand || 'Unspecified Brand',
         category,
-        batch_number: batchNumber || 'BATCH-001',
+        batch_number: batchNumber || 'BATCH-2026-01',
         declared_net_quantity: declaredNetQty
       });
 
-      // Prepare files with roles
       const filesWithRoles = Object.entries(uploadedSlots).map(([role, item]) => ({
         role,
         file: item.file,
@@ -87,7 +121,6 @@ export default function NewInspectionPage() {
 
       await uploadImages(newRecord.id, filesWithRoles);
 
-      // Sequentially animate the 6 pipeline steps matching Section 5.3
       for (let i = 1; i < ANALYSIS_STEPS.length; i++) {
         setCurrentStepIndex(i);
         await new Promise((res) => setTimeout(res, 450));
@@ -95,7 +128,6 @@ export default function NewInspectionPage() {
 
       const analyzedRecord = await analyzeInspection(newRecord.id);
 
-      // Short delay so officer sees the final checkmark
       setTimeout(() => {
         navigate(`/inspections/${analyzedRecord.id}`);
       }, 500);
@@ -116,20 +148,40 @@ export default function NewInspectionPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Enter commodity metadata and upload package images for OCR declaration extraction & compliance scoring.
+            Scan commodity packaging via live OCR scanner or upload panel images for legal compliance scoring.
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => navigate('/')}
-          className="self-start sm:self-auto gap-1.5 text-xs h-9"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Dashboard
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            onClick={() => setScannerOpen(true)}
+            className="gap-2 text-xs font-bold h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white shadow-sm cursor-pointer"
+          >
+            <Scan className="h-4 w-4" />
+            Open Officer Live Scanner
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate('/')}
+            className="gap-1.5 text-xs h-9"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        </div>
       </div>
+
+      {scannedNotification && (
+        <Alert className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <AlertDescription className="text-xs font-semibold">
+            {scannedNotification}
+          </AlertDescription>
+        </Alert>
+      )}
 
       {generalError && (
         <ErrorState
@@ -146,6 +198,30 @@ export default function NewInspectionPage() {
         </div>
       ) : (
         <form onSubmit={handleStartAnalysis} className="space-y-6">
+          {/* Officer Quick Live Scan Banner */}
+          <div className="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-2xl p-5 border border-blue-700/50 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 shrink-0">
+                <Camera className="w-6 h-6 animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white">Officer Camera Scanner Mode</h3>
+                <p className="text-xs text-blue-200 mt-0.5">
+                  Point camera at product package to instantly capture photo, extract Rule 6 declarations, and submit for analysis.
+                </p>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              onClick={() => setScannerOpen(true)}
+              className="bg-white text-slate-900 hover:bg-blue-50 font-bold text-xs px-5 h-9 shrink-0 cursor-pointer shadow-md"
+            >
+              <Scan className="w-4 h-4 mr-1.5 text-blue-600" />
+              Launch Scanner Viewfinder
+            </Button>
+          </div>
+
           {/* Commodity Details Card */}
           <Card className="border-border shadow-xs">
             <CardHeader className="pb-4 border-b border-border/40">
@@ -237,17 +313,17 @@ export default function NewInspectionPage() {
             </CardContent>
           </Card>
 
-          {/* Image Upload Card */}
+          {/* Image Upload / Scanned Evidence Card */}
           <Card className="border-border shadow-xs">
             <CardHeader className="pb-4 border-b border-border/40">
               <div className="flex items-center gap-2">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-xs">
                   2
                 </span>
-                <CardTitle className="text-base font-semibold">Packaging Panels & Evidence Upload</CardTitle>
+                <CardTitle className="text-base font-semibold">Packaging Panels & Scanned Evidence</CardTitle>
               </div>
               <CardDescription className="text-xs">
-                Upload clear evidence images for automated OCR declaration extraction and vision-based bounding box validation.
+                Photos captured from live scanner or uploaded panel images for automated OCR declaration extraction.
               </CardDescription>
             </CardHeader>
 
@@ -267,7 +343,7 @@ export default function NewInspectionPage() {
               type="button"
               variant="outline"
               onClick={() => navigate('/')}
-              className="text-xs h-10 px-4"
+              className="text-xs h-10 px-4 cursor-pointer"
             >
               Cancel
             </Button>
@@ -276,16 +352,23 @@ export default function NewInspectionPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="gap-2 text-xs font-semibold h-10 px-6 shadow-sm shadow-primary/20 bg-blue-600 hover:bg-blue-700 text-white"
+                className="gap-2 text-xs font-semibold h-10 px-6 shadow-sm shadow-primary/20 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
-                Start Compliance Analysis
+                Submit Photo for Compliance OCR Audit
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </MagneticButton>
           </div>
         </form>
       )}
+
+      {/* Officer Live Scanner Modal Dialog */}
+      <OfficerScannerModal
+        isOpen={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onScanComplete={handleScanComplete}
+      />
     </div>
   );
 }

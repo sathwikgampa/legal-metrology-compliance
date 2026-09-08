@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Bell, Scale, Sun, Moon } from "lucide-react"
+import { Search, Bell, Scale, Sun, Moon, Scan } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
 
 export interface NavbarProps {
@@ -60,10 +60,20 @@ export default function Navbar({
         </nav>
       </div>
 
-      {/* Right: Search, Dark Mode Switch, Notifications & User Avatar */}
+      {/* Right: Officer Live Scanner, Search, Dark Mode Switch, Notifications & User Avatar */}
       <div className="flex items-center gap-3">
+        {/* Officer Live Scanner Launcher */}
+        <button
+          onClick={() => navigate('/inspections/new')}
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
+          title="Open Officer OCR Packaging Scanner"
+        >
+          <Scan className="w-3.5 h-3.5" />
+          <span>Live Scanner</span>
+        </button>
+
         {/* Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-56">
+        <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-48 lg:w-56">
           <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text"
