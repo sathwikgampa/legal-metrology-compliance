@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { ThemeProvider } from "./context/ThemeContext"
+import { NotificationProvider } from "./context/NotificationContext"
 import Navbar from "./components/Navbar"
 import Sidebar from "./components/Sidebar"
 import DashboardPage from "./pages/DashboardPage"
@@ -17,6 +18,7 @@ function AppContent() {
   const [activeView, setActiveView] = useState<string>("all")
   const [activeCategory, setActiveCategory] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState<string>("")
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 
   const isLoginPage = location.pathname === "/login"
 
@@ -30,7 +32,7 @@ function AppContent() {
 
   return (
     <div
-      className="bg-[#F8F7FC] dark:bg-[#13111C] text-[#3A3A45] dark:text-[#ECE9F6] font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
+      className="bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6] font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
       id="app-body"
     >
       <Navbar
@@ -38,17 +40,39 @@ function AppContent() {
         onSelectTab={setActiveTab}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
       />
-      <div className="flex flex-1 overflow-hidden">
+
+      {/* Slide-over Sidebar Drawer with Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 transition-opacity duration-300 animate-in fade-in"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
           activeTab={activeTab}
-          onSelectTab={setActiveTab}
+          onSelectTab={(tab) => {
+            setActiveTab(tab)
+            setIsSidebarOpen(false)
+          }}
           activeView={activeView}
           onSelectView={setActiveView}
           activeCategory={activeCategory}
           onSelectCategory={setActiveCategory}
         />
-        <main className="flex-1 overflow-hidden" id="main-content">
+      </div>
+
+      <div className="flex flex-1 overflow-hidden w-full">
+        <main className="flex-1 overflow-hidden w-full" id="main-content">
           <Routes>
             <Route
               path="/"
@@ -76,9 +100,11 @@ function AppContent() {
 export default function App(): React.JSX.Element {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <NotificationProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </NotificationProvider>
     </ThemeProvider>
   )
 }

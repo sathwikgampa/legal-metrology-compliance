@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Filter,
   Download,
@@ -15,11 +15,14 @@ import {
   ShoppingBag,
   Camera,
   Scan,
+  BellRing,
 } from "lucide-react"
 import DocketDetailSplitPane, { DocketItem } from "../components/ledger/DocketDetailSplitPane"
 import FilterSplitPane, { FilterCriteria } from "../components/ledger/FilterSplitPane"
 import ManualScanSplitPane from "../components/ledger/ManualScanSplitPane"
 import OfficerScannerModal from "../components/OfficerScannerModal"
+import StatutoryNotificationBar from "../components/dashboard/StatutoryNotificationBar"
+import { useNotifications } from "../context/NotificationContext"
 import EntitiesView from "../components/entities/EntitiesView"
 import AnalyticsView from "../components/analytics/AnalyticsView"
 import SettingsView from "../components/settings/SettingsView"
@@ -139,6 +142,31 @@ export default function DashboardPage({
     ruleViolation: "ALL",
     minConfidence: 0,
   })
+
+  // Notification System Integration
+  const {
+    targetDocketId,
+    setTargetDocketId,
+    isBannerVisible,
+    restoreBanner,
+    notifications,
+  } = useNotifications()
+
+  const handleSelectDocketById = (docketId: string) => {
+    const found = dockets.find((d) => d.id === docketId)
+    if (found) {
+      setSelectedDocket(found)
+      setActivePane("docket")
+    }
+  }
+
+  // Auto-open docket when targeted from notification
+  useEffect(() => {
+    if (targetDocketId) {
+      handleSelectDocketById(targetDocketId)
+      setTargetDocketId(null)
+    }
+  }, [targetDocketId])
 
   const showToast = (msg: string) => {
     setToastMessage(msg)
@@ -381,6 +409,18 @@ export default function DashboardPage({
               <span>Export</span>
             </button>
 
+            {/* Un-dismiss notification bar button if hidden */}
+            {!isBannerVisible && notifications.length > 0 && (
+              <button
+                onClick={restoreBanner}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#EDEBFB] dark:bg-[#2A2544] border border-[#7C6FE0]/40 text-[#7C6FE0] text-xs font-bold transition-all cursor-pointer shadow-xs hover:bg-[#7C6FE0] hover:text-white"
+                title="Restore Statutory Advisory Bar"
+              >
+                <BellRing className="w-3.5 h-3.5" />
+                <span>Advisories ({notifications.length})</span>
+              </button>
+            )}
+
             {/* Primary Action Button: Live Scanner */}
             <button
               onClick={() => setIsLiveScannerOpen(true)}
@@ -393,7 +433,10 @@ export default function DashboardPage({
           </div>
         </div>
 
-        {/* 2. SUMMARY STAT CARDS STRIP */}
+        {/* 2. STATUTORY ENFORCEMENT & COMPLIANCE NOTIFICATION BAR */}
+        <StatutoryNotificationBar onSelectDocket={handleSelectDocketById} />
+
+        {/* 3. SUMMARY STAT CARDS STRIP */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Card 1: Compliance Rate */}
           <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] border-l-4 border-l-[#8FD9B6] rounded-xl p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
