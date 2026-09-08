@@ -11,6 +11,7 @@ export interface DocketItem {
   rule_violation?: string
   gtin: string
   confidence: number
+  image?: string
 }
 
 interface DocketDetailSplitPaneProps {
@@ -28,27 +29,27 @@ export default function DocketDetailSplitPane({
 
   return (
     /* Side Drawer Panel with Refined Soft Palette & Dark Mode Support */
-    <aside className="w-96 bg-[#FBFAFE] dark:bg-[#1A1926] border-l border-[#E3E1F0] dark:border-[#2E2C42] p-5 flex flex-col justify-between shrink-0 shadow-sm transition-colors duration-200 overflow-y-auto">
+    <aside className="w-96 bg-[#FBFAFE] dark:bg-[#161424] border-l border-[#E3E1F0] dark:border-[#26223A] p-5 flex flex-col justify-between shrink-0 shadow-sm transition-colors duration-200 overflow-y-auto">
       <div className="space-y-5">
         {/* Drawer Header */}
-        <div className="flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#2E2C42] pb-3">
+        <div className="flex items-center justify-between border-b border-[#E3E1F0] dark:border-[#26223A] pb-3">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-sm text-[#3A3A45] dark:text-[#ECEBF5]">Compliance Docket</span>
-            <span className="font-mono text-xs text-[#6E6E80] dark:text-[#A6A4B8] bg-[#F2F1F9] dark:bg-[#1F1E2E] px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#2E2C42] font-bold">
+            <span className="font-bold text-sm text-[#3A3A45] dark:text-[#ECE9F6]">Compliance Docket</span>
+            <span className="font-mono text-xs text-[#6E6E80] dark:text-[#A29DB8] bg-[#F2F1F9] dark:bg-[#1C192C] px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#26223A] font-bold">
               {docket.id}
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[#6E6E80] dark:text-[#A6A4B8]">
+          <div className="flex items-center gap-1 text-[#6E6E80] dark:text-[#A29DB8]">
             <button
               onClick={() => onToast(`Copied Docket ${docket.id} details`)}
-              className="p-1 hover:text-[#7C6FE0] dark:hover:text-[#9589EC] hover:bg-[#F2F1F9] dark:hover:bg-[#222132] rounded-md transition-colors cursor-pointer"
+              className="p-1 hover:text-[#7C6FE0] hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C] rounded-md transition-colors cursor-pointer"
               title="Copy details"
             >
               <MoreHorizontal className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-1 hover:text-[#7C6FE0] dark:hover:text-[#9589EC] hover:bg-[#F2F1F9] dark:hover:bg-[#222132] rounded-md transition-colors cursor-pointer"
+              className="p-1 hover:text-[#7C6FE0] hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C] rounded-md transition-colors cursor-pointer"
               title="Close panel"
             >
               <X className="w-4 h-4" />
@@ -56,9 +57,29 @@ export default function DocketDetailSplitPane({
           </div>
         </div>
 
+        {/* Product Image Preview in Detail Pane */}
+        {docket.image && (
+          <div className="relative rounded-xl overflow-hidden border border-[#E3E1F0] dark:border-[#26223A] bg-[#F2F1F9] dark:bg-[#1C192C] shadow-xs group">
+            <img
+              src={docket.image}
+              alt={docket.product}
+              className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+              <span className="text-xs font-bold truncate drop-shadow-md">
+                {docket.product}
+              </span>
+              <span className="font-mono text-[10px] font-bold bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/20">
+                GTIN {docket.gtin}
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Soft Colored Status Alert Card */}
         {docket.status === "VIOLATION" ? (
-          <div className="border border-[#F3A6A6] bg-[#F3A6A6]/15 dark:bg-[#F3A6A6]/20 rounded-lg p-3.5 space-y-2">
+          <div className="border border-[#F3A6A6]/40 bg-[#F3A6A6]/15 dark:bg-[#261212] dark:border-[#3D1B1B] rounded-lg p-3.5 space-y-2">
             <div className="flex items-center justify-between">
               <span className="bg-[#F3A6A6] text-[#9B3B3B] font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Non-Compliant
@@ -75,12 +96,12 @@ export default function DocketDetailSplitPane({
                 {docket.rule_violation || "Rule 6(1)(e) - Missing MRP"}
               </div>
             </div>
-            <p className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] leading-relaxed">
+            <p className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8] leading-relaxed">
               Declaration omitted under Section 18 of Legal Metrology Act, 2009. Evidence recorded.
             </p>
           </div>
         ) : docket.status === "REVIEW" ? (
-          <div className="border border-[#F5D08A] bg-[#F5D08A]/15 dark:bg-[#F5D08A]/20 rounded-lg p-3.5 space-y-2">
+          <div className="border border-[#F5D08A]/40 bg-[#F5D08A]/15 dark:bg-[#261B0A] dark:border-[#3D2B10] rounded-lg p-3.5 space-y-2">
             <div className="flex items-center justify-between">
               <span className="bg-[#F5D08A] text-[#8A6416] font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Pending Review
@@ -97,12 +118,12 @@ export default function DocketDetailSplitPane({
                 {docket.rule_violation || "Rule 6(1)(c) - Net Quantity Glare"}
               </div>
             </div>
-            <p className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] leading-relaxed">
+            <p className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8] leading-relaxed">
               Optical character recognition below verification threshold. Field inspector sign-off required.
             </p>
           </div>
         ) : (
-          <div className="border border-[#8FD9B6] bg-[#8FD9B6]/15 dark:bg-[#8FD9B6]/20 rounded-lg p-3.5 space-y-2">
+          <div className="border border-[#8FD9B6]/40 bg-[#8FD9B6]/15 dark:bg-[#0E2319] dark:border-[#163A29] rounded-lg p-3.5 space-y-2">
             <div className="flex items-center justify-between">
               <span className="bg-[#8FD9B6] text-[#2F7A55] font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                 Certified
@@ -119,7 +140,7 @@ export default function DocketDetailSplitPane({
                 All Rule 6 Declarations Approved
               </div>
             </div>
-            <p className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8] leading-relaxed">
+            <p className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8] leading-relaxed">
               Mandatory declarations (Name, Net Quantity, MRP, Date, Customer Care) verified compliant.
             </p>
           </div>
@@ -127,46 +148,46 @@ export default function DocketDetailSplitPane({
 
         {/* Commodity / Instrument Details */}
         <div className="space-y-3">
-          <div className="text-[11px] font-bold text-[#6E6E80] dark:text-[#A6A4B8] uppercase tracking-wider">
+          <div className="text-[11px] font-bold text-[#6E6E80] dark:text-[#A29DB8] uppercase tracking-wider">
             Commodity Specifications
           </div>
-          <div className="bg-[#F2F1F9] dark:bg-[#1F1E2E] border border-[#E3E1F0] dark:border-[#2E2C42] rounded-lg p-3.5 space-y-2.5 text-xs">
+          <div className="bg-[#F2F1F9] dark:bg-[#1C192C] border border-[#E3E1F0] dark:border-[#26223A] rounded-lg p-3.5 space-y-2.5 text-xs">
             <div>
-              <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">Manufacturer / Regulated Entity</div>
-              <div className="font-bold text-[#3A3A45] dark:text-[#ECEBF5] mt-0.5">
+              <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">Manufacturer / Regulated Entity</div>
+              <div className="font-bold text-[#3A3A45] dark:text-[#ECE9F6] mt-0.5">
                 {docket.manufacturer}
               </div>
             </div>
             <div>
-              <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">Product Title</div>
-              <div className="font-semibold text-[#3A3A45] dark:text-[#ECEBF5] mt-0.5">
+              <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">Product Title</div>
+              <div className="font-semibold text-[#3A3A45] dark:text-[#ECE9F6] mt-0.5">
                 {docket.product}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E3E1F0] dark:border-[#2E2C42]">
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E3E1F0] dark:border-[#26223A]">
               <div>
-                <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">GTIN / Barcode</div>
-                <div className="font-mono font-bold text-[#3A3A45] dark:text-[#ECEBF5] mt-0.5">
+                <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">GTIN / Barcode</div>
+                <div className="font-mono font-bold text-[#3A3A45] dark:text-[#ECE9F6] mt-0.5">
                   {docket.gtin}
                 </div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">Sector</div>
-                <div className="text-[#3A3A45] dark:text-[#ECEBF5] font-medium mt-0.5">
+                <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">Sector</div>
+                <div className="text-[#3A3A45] dark:text-[#ECE9F6] font-medium mt-0.5">
                   {docket.category}
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E3E1F0] dark:border-[#2E2C42]">
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#E3E1F0] dark:border-[#26223A]">
               <div>
-                <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">Audit Date</div>
-                <div className="font-bold text-[#3A3A45] dark:text-[#ECEBF5] mt-0.5">
+                <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">Audit Date</div>
+                <div className="font-bold text-[#3A3A45] dark:text-[#ECE9F6] mt-0.5">
                   {docket.timestamp}
                 </div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E6E80] dark:text-[#A6A4B8]">OCR Score</div>
-                <div className="font-mono font-bold text-[#7C6FE0] dark:text-[#9589EC] mt-0.5">
+                <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8]">OCR Score</div>
+                <div className="font-mono font-bold text-[#7C6FE0] mt-0.5">
                   {docket.confidence}%
                 </div>
               </div>
@@ -176,11 +197,11 @@ export default function DocketDetailSplitPane({
       </div>
 
       {/* Footer Action Buttons with soft indigo and salmon tones */}
-      <div className="pt-4 border-t border-[#E3E1F0] dark:border-[#2E2C42] space-y-2">
+      <div className="pt-4 border-t border-[#E3E1F0] dark:border-[#26223A] space-y-2">
         <div className="flex items-center gap-2">
           <button
             onClick={() => onToast(`Analysis override recorded for ${docket.id}`)}
-            className="flex-1 py-2 px-3 bg-[#FDFDFF] dark:bg-[#1F1E2E] border border-[#E3E1F0] dark:border-[#2E2C42] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] hover:text-[#7C6FE0] dark:hover:text-[#9589EC] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5] text-xs font-semibold rounded-lg transition-colors cursor-pointer text-center shadow-xs"
+            className="flex-1 py-2 px-3 bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] hover:bg-[#EDEBFB] dark:hover:bg-[#221C38] hover:text-[#7C6FE0] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6] text-xs font-semibold rounded-lg transition-colors cursor-pointer text-center shadow-xs"
           >
             Override Check
           </button>

@@ -35,6 +35,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     rule_violation: "Rule 6(1)(e) - Missing MRP",
     gtin: "008901030",
     confidence: 94.1,
+    image: "/products/potato_crisps.jpg",
   },
   {
     id: "INS-8902",
@@ -45,6 +46,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     status: "COMPLIANT",
     gtin: "008901031",
     confidence: 98.4,
+    image: "/products/wheat_atta.jpg",
   },
   {
     id: "INS-8903",
@@ -56,6 +58,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     rule_violation: "Rule 6(1)(c) - Net Qty Glare",
     gtin: "008901032",
     confidence: 62.8,
+    image: "/products/face_serum.jpg",
   },
   {
     id: "INS-8904",
@@ -67,6 +70,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     rule_violation: "Rule 6(1)(a) - Country of Origin Missing",
     gtin: "008901033",
     confidence: 91.0,
+    image: "/products/tea_leaves.jpg",
   },
   {
     id: "INS-8905",
@@ -77,6 +81,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     status: "COMPLIANT",
     gtin: "008901034",
     confidence: 99.1,
+    image: "/products/mineral_water.jpg",
   },
   {
     id: "INS-8906",
@@ -87,6 +92,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     status: "COMPLIANT",
     gtin: "008901035",
     confidence: 97.5,
+    image: "/products/wireless_earbuds.jpg",
   },
   {
     id: "INS-8907",
@@ -98,6 +104,7 @@ const INITIAL_DOCKETS: DocketItem[] = [
     rule_violation: "Rule 6(1)(ac) - Missing Customer Care",
     gtin: "008901036",
     confidence: 93.2,
+    image: "/products/facial_cream.jpg",
   },
 ]
 
@@ -257,6 +264,7 @@ export default function DashboardPage({
       rule_violation,
       gtin: `00890${Math.floor(1000 + Math.random() * 9000)}`,
       confidence: avgConfidence || 98.0,
+      image: scannedData.photoUrl,
     }
 
     setDockets([newDocket, ...dockets])
@@ -283,10 +291,10 @@ export default function DashboardPage({
   // TAB 2: ENTITIES VIEW
   if (activeTab === "Entities") {
     return (
-      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#12111A] text-[#3A3A45] dark:text-[#ECEBF5]">
+      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6]">
         <EntitiesView searchQuery={searchQuery} onToast={showToast} />
         {toastMessage && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#2A2744] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#221C38] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
             <Check className="w-4 h-4 text-[#8FD9B6]" />
             <span>{toastMessage}</span>
           </div>
@@ -298,10 +306,10 @@ export default function DashboardPage({
   // TAB 3: ANALYTICS VIEW
   if (activeTab === "Analytics") {
     return (
-      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#12111A] text-[#3A3A45] dark:text-[#ECEBF5]">
+      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6]">
         <AnalyticsView onToast={showToast} />
         {toastMessage && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#2A2744] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#221C38] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
             <Check className="w-4 h-4 text-[#8FD9B6]" />
             <span>{toastMessage}</span>
           </div>
@@ -313,10 +321,10 @@ export default function DashboardPage({
   // TAB 4: SETTINGS VIEW
   if (activeTab === "Settings") {
     return (
-      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#12111A] text-[#3A3A45] dark:text-[#ECEBF5]">
+      <div className="flex flex-1 overflow-hidden relative bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6]">
         <SettingsView onToast={showToast} />
         {toastMessage && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#2A2744] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#221C38] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg">
             <Check className="w-4 h-4 text-[#8FD9B6]" />
             <span>{toastMessage}</span>
           </div>
@@ -327,10 +335,10 @@ export default function DashboardPage({
 
   // TAB 1 (DEFAULT): COMPLIANCE DASHBOARD IN REFINED SOFT LAVENDER & INDIGO PALETTE (WITH FULL LIGHT/DARK SUPPORT)
   return (
-    <div className="flex flex-1 h-[calc(100vh-4rem)] overflow-hidden bg-[#F8F7FC] dark:bg-[#12111A] text-[#3A3A45] dark:text-[#ECEBF5] transition-colors duration-200 relative">
+    <div className="flex flex-1 h-[calc(100vh-4rem)] overflow-hidden bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6] transition-colors duration-200 relative">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#2A2744] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#3A3A45] dark:bg-[#221C38] text-white text-xs font-semibold px-4 py-2.5 rounded-lg border border-[#E3E1F0]/30 flex items-center gap-2 shadow-lg animate-in fade-in slide-in-from-bottom-2">
           <Check className="w-4 h-4 text-[#8FD9B6]" />
           <span>{toastMessage}</span>
         </div>
@@ -339,9 +347,9 @@ export default function DashboardPage({
       {/* Main Content Scrollable Area */}
       <div className="flex-1 flex flex-col p-6 sm:p-8 overflow-y-auto min-w-0">
         {/* 1. DASHBOARD HEADER SECTION */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-4 border-b border-[#E3E1F0] dark:border-[#2E2C42]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-4 border-b border-[#E3E1F0] dark:border-[#26223A]">
           <div>
-            <h1 className="text-2xl sm:text-[30px] font-bold text-[#3A3A45] dark:text-[#ECEBF5] tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-[30px] font-bold text-[#3A3A45] dark:text-[#ECE9F6] tracking-tight leading-tight">
               Compliance Dashboard
             </h1>
             <p className="text-sm text-[#6E6E80] dark:text-[#A6A4B8] mt-1">
@@ -356,8 +364,8 @@ export default function DashboardPage({
               onClick={() => setActivePane(activePane === "filter" ? null : "filter")}
               className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-xs font-semibold transition-all cursor-pointer shadow-xs ${
                 activePane === "filter"
-                  ? "bg-[#EDEBFB] dark:bg-[#2A2744] text-[#7C6FE0] dark:text-[#9589EC] border-[#7C6FE0] font-bold"
-                  : "bg-[#FDFDFF] dark:bg-[#1F1E2E] border-[#E3E1F0] dark:border-[#2E2C42] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] hover:text-[#7C6FE0] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5]"
+                  ? "bg-[#EDEBFB] dark:bg-[#221C38] text-[#7C6FE0] dark:text-[#9589EC] border-[#7C6FE0] font-bold"
+                  : "bg-[#FDFDFF] dark:bg-[#161424] border-[#E3E1F0] dark:border-[#26223A] hover:bg-[#EDEBFB] dark:hover:bg-[#221C38] hover:text-[#7C6FE0] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6]"
               }`}
             >
               <Filter className="w-3.5 h-3.5" />
@@ -367,7 +375,7 @@ export default function DashboardPage({
             {/* Export CSV Button */}
             <button
               onClick={handleExportCSV}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#FDFDFF] dark:bg-[#1F1E2E] border border-[#E3E1F0] dark:border-[#2E2C42] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2744] hover:text-[#7C6FE0] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECEBF5] text-xs font-semibold transition-all cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] hover:bg-[#EDEBFB] dark:hover:bg-[#221C38] hover:text-[#7C6FE0] hover:border-[#7C6FE0] text-[#3A3A45] dark:text-[#ECE9F6] text-xs font-semibold transition-all cursor-pointer shadow-xs"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export</span>
@@ -388,8 +396,8 @@ export default function DashboardPage({
         {/* 2. SUMMARY STAT CARDS STRIP */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Card 1: Compliance Rate */}
-          <div className="bg-[#FDFDFF] dark:bg-[#1F1E2E] border border-[#E3E1F0] dark:border-[#2E2C42] border-l-4 border-l-[#8FD9B6] rounded-lg p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
-            <div className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E80] dark:text-[#A6A4B8]">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] border-l-4 border-l-[#8FD9B6] rounded-xl p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E80] dark:text-[#A29DB8]">
               Compliance Rate
             </div>
             <div className="flex items-baseline gap-2 my-2">
@@ -406,7 +414,7 @@ export default function DashboardPage({
           </div>
 
           {/* Card 2: Total Items Audited */}
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] border-l-4 border-l-[#7C6FE0] rounded-lg p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] border-l-4 border-l-[#7C6FE0] rounded-xl p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E80] dark:text-[#A29DB8]">
               Total Items Audited
             </div>
@@ -424,7 +432,7 @@ export default function DashboardPage({
           </div>
 
           {/* Card 3: Flagged Violations */}
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] border-l-4 border-l-[#F3A6A6] rounded-lg p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] border-l-4 border-l-[#F3A6A6] rounded-xl p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E80] dark:text-[#A29DB8]">
               Flagged Violations
             </div>
@@ -442,7 +450,7 @@ export default function DashboardPage({
           </div>
 
           {/* Card 4: Pending Review */}
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] border-l-4 border-l-[#F5D08A] rounded-lg p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] border-l-4 border-l-[#F5D08A] rounded-xl p-4 shadow-xs flex flex-col justify-between hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)] hover:border-[#7C6FE0] transition-all">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E80] dark:text-[#A29DB8]">
               Pending Review
             </div>
@@ -481,7 +489,7 @@ export default function DashboardPage({
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     isActive
                       ? "bg-[#7C6FE0] text-white shadow-[0_2px_8px_rgba(124,111,224,0.3)] font-bold"
-                      : "bg-[#FDFDFF] dark:bg-[#1C1A2B] text-[#6E6E80] dark:text-[#A29DB8] border border-[#E3E1F0] dark:border-[#2E2A44] hover:text-[#3A3A45] dark:hover:text-[#ECE9F6] hover:bg-[#F2F1F9] dark:hover:bg-[#232035]"
+                      : "bg-[#FDFDFF] dark:bg-[#161424] text-[#6E6E80] dark:text-[#A29DB8] border border-[#E3E1F0] dark:border-[#26223A] hover:text-[#3A3A45] dark:hover:text-[#ECE9F6] hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]"
                   }`}
                 >
                   {chip.label}
@@ -491,14 +499,14 @@ export default function DashboardPage({
           </div>
 
           {/* View Mode Switcher: Cards vs Table */}
-          <div className="flex items-center self-end sm:self-auto bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] p-1 rounded-lg shadow-xs">
+          <div className="flex items-center self-end sm:self-auto bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] p-1 rounded-lg shadow-xs">
             <button
               onClick={() => setDisplayMode("cards")}
               title="Card Grid View"
               className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                 displayMode === "cards"
                   ? "bg-[#7C6FE0] text-white shadow-xs"
-                  : "text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#232035]"
+                  : "text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]"
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
@@ -509,7 +517,7 @@ export default function DashboardPage({
               className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                 displayMode === "table"
                   ? "bg-[#7C6FE0] text-white shadow-xs"
-                  : "text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#232035]"
+                  : "text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#3A3A45] dark:hover:text-white hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]"
               }`}
             >
               <List className="w-4 h-4" />
@@ -530,27 +538,39 @@ export default function DashboardPage({
                     setSelectedDocket(item)
                     setActivePane("docket")
                   }}
-                  className={`bg-[#FDFDFF] dark:bg-[#1C1A2B] border rounded-lg overflow-hidden flex flex-col justify-between transition-all duration-200 cursor-pointer group shadow-xs ${
+                  className={`bg-[#FDFDFF] dark:bg-[#161424] border rounded-xl overflow-hidden flex flex-col justify-between transition-all duration-200 cursor-pointer group shadow-xs ${
                     isSelected
                       ? "border-[#7C6FE0] ring-2 ring-[#7C6FE0]/30 shadow-[0_8px_20px_rgba(124,111,224,0.2)]"
-                      : "border-[#E3E1F0] dark:border-[#2E2A44] hover:border-[#7C6FE0] hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)]"
+                      : "border-[#E3E1F0] dark:border-[#26223A] hover:border-[#7C6FE0] hover:shadow-[0_8px_20px_rgba(124,111,224,0.15)]"
                   }`}
                 >
                   {/* Top Thumbnail */}
-                  <div className="h-32 bg-[#F2F1F9] dark:bg-[#161424] border-b border-[#E3E1F0] dark:border-[#2E2A44] relative flex items-center justify-center p-4">
-                    <div className="p-3 bg-[#FDFDFF] dark:bg-[#1C1A2B] rounded-lg border border-[#E3E1F0] dark:border-[#2E2A44] shadow-xs group-hover:scale-105 transition-transform">
-                      {getCategoryIcon(item.category)}
-                    </div>
+                  <div className="h-44 bg-[#F2F1F9] dark:bg-[#1C192C] border-b border-[#E3E1F0] dark:border-[#26223A] relative flex items-center justify-center overflow-hidden">
+                    {item.image ? (
+                      <>
+                        <img
+                          src={item.image}
+                          alt={item.product}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                      </>
+                    ) : (
+                      <div className="p-3 bg-[#FDFDFF] dark:bg-[#161424] rounded-lg border border-[#E3E1F0] dark:border-[#26223A] shadow-xs group-hover:scale-105 transition-transform">
+                        {getCategoryIcon(item.category)}
+                      </div>
+                    )}
 
                     {/* GTIN / Docket ID pill in thumbnail */}
-                    <div className="absolute top-2.5 left-2.5">
-                      <span className="font-mono text-[10px] font-bold text-[#6E6E80] dark:text-[#A29DB8] bg-[#FDFDFF]/90 dark:bg-[#1C1A2B]/90 px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#2E2A44] shadow-xs">
+                    <div className="absolute top-2.5 left-2.5 z-10">
+                      <span className="font-mono text-[10px] font-bold text-[#3A3A45] dark:text-[#ECE9F6] bg-white/90 dark:bg-[#161424]/90 backdrop-blur-md px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#26223A] shadow-xs">
                         {item.id}
                       </span>
                     </div>
 
-                    <div className="absolute top-2.5 right-2.5">
-                      <span className="text-[10px] font-mono text-[#6E6E80] dark:text-[#A29DB8] bg-[#FDFDFF]/90 dark:bg-[#1C1A2B]/90 px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#2E2A44] shadow-xs">
+                    <div className="absolute top-2.5 right-2.5 z-10">
+                      <span className="text-[10px] font-mono text-[#3A3A45] dark:text-[#ECE9F6] bg-white/90 dark:bg-[#161424]/90 backdrop-blur-md px-2 py-0.5 rounded-md border border-[#E3E1F0] dark:border-[#26223A] shadow-xs">
                         GTIN {item.gtin}
                       </span>
                     </div>
@@ -589,17 +609,17 @@ export default function DashboardPage({
                       {/* Status Pill Badges */}
                       <div className="mt-3">
                         {item.status === "COMPLIANT" && (
-                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#8FD9B6] text-[#2F7A55] dark:bg-[#142E22] dark:text-[#8FD9B6] dark:border dark:border-[#1F4A36]">
+                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#8FD9B6]/20 text-[#2F7A55] dark:bg-[#0E2319] dark:text-[#8FD9B6] border border-[#8FD9B6]/40 dark:border-[#163A29]">
                             CERTIFIED COMPLIANT
                           </span>
                         )}
                         {item.status === "REVIEW" && (
-                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#F5D08A] text-[#8A6416] dark:bg-[#33250E] dark:text-[#F5D08A] dark:border dark:border-[#523A14]">
+                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#F5D08A]/20 text-[#8A6416] dark:bg-[#261B0A] dark:text-[#F5D08A] border border-[#F5D08A]/40 dark:border-[#3D2B10]">
                             PENDING REVIEW
                           </span>
                         )}
                         {item.status === "VIOLATION" && (
-                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#F3A6A6] text-[#9B3B3B] dark:bg-[#331818] dark:text-[#F3A6A6] dark:border dark:border-[#522424]">
+                          <span className="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#F3A6A6]/20 text-[#9B3B3B] dark:bg-[#261212] dark:text-[#F3A6A6] border border-[#F3A6A6]/40 dark:border-[#3D1B1B]">
                             FLAGGED VIOLATION
                           </span>
                         )}
@@ -607,7 +627,7 @@ export default function DashboardPage({
                     </div>
 
                     {/* Bottom Meta Row */}
-                    <div className="pt-3 mt-3 border-t border-[#E3E1F0] dark:border-[#2E2A44] flex items-center justify-between">
+                    <div className="pt-3 mt-3 border-t border-[#E3E1F0] dark:border-[#26223A] flex items-center justify-between">
                       <div>
                         <span className="text-xs font-bold text-[#3A3A45] dark:text-[#ECE9F6]">
                           {item.timestamp}
@@ -633,11 +653,11 @@ export default function DashboardPage({
 
         {/* VIEW MODE B: TABLE LEDGER VIEW */}
         {displayMode === "table" && (
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg shadow-xs overflow-hidden">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] rounded-xl shadow-xs overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-[#F2F1F9] dark:bg-[#232035] text-[#6E6E80] dark:text-[#A29DB8] font-bold border-b border-[#E3E1F0] dark:border-[#2E2A44]">
+                  <tr className="bg-[#F2F1F9] dark:bg-[#1C192C] text-[#6E6E80] dark:text-[#A29DB8] font-bold border-b border-[#E3E1F0] dark:border-[#26223A]">
                     <th className="py-3 px-4 font-semibold">Docket ID</th>
                     <th className="py-3 px-4 font-semibold">Timestamp</th>
                     <th className="py-3 px-4 font-semibold">Commodity & Entity</th>
@@ -647,7 +667,7 @@ export default function DashboardPage({
                     <th className="py-3 px-4 font-semibold text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E3E1F0] dark:divide-[#2E2A44]">
+                <tbody className="divide-y divide-[#E3E1F0] dark:divide-[#26223A]">
                   {filteredItems.map((item) => {
                     const isSelected = selectedDocket?.id === item.id && activePane === "docket"
                     return (
@@ -659,8 +679,8 @@ export default function DashboardPage({
                         }}
                         className={`cursor-pointer transition-colors ${
                           isSelected
-                            ? "bg-[#EDEBFB] dark:bg-[#2A2544]"
-                            : "hover:bg-[#F2F1F9] dark:hover:bg-[#232035]"
+                            ? "bg-[#EDEBFB] dark:bg-[#221C38]"
+                            : "hover:bg-[#F2F1F9] dark:hover:bg-[#1C192C]"
                         }`}
                       >
                         <td className="py-3.5 px-4 font-mono font-bold text-[#7C6FE0]">
@@ -670,9 +690,24 @@ export default function DashboardPage({
                           {item.timestamp}
                         </td>
                         <td className="py-3.5 px-4">
-                          <div className="font-bold text-[#3A3A45] dark:text-[#ECE9F6]">{item.product}</div>
-                          <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8] mt-0.5">
-                            {item.manufacturer} • GTIN {item.gtin}
+                          <div className="flex items-center gap-3">
+                            {item.image ? (
+                              <img
+                                src={item.image}
+                                alt={item.product}
+                                className="w-10 h-10 rounded-lg object-cover border border-[#E3E1F0] dark:border-[#26223A] shadow-xs shrink-0"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-lg bg-[#F2F1F9] dark:bg-[#1C192C] border border-[#E3E1F0] dark:border-[#26223A] flex items-center justify-center shrink-0">
+                                {getCategoryIcon(item.category)}
+                              </div>
+                            )}
+                            <div>
+                              <div className="font-bold text-[#3A3A45] dark:text-[#ECE9F6]">{item.product}</div>
+                              <div className="text-[11px] text-[#6E6E80] dark:text-[#A29DB8] mt-0.5">
+                                {item.manufacturer} • GTIN {item.gtin}
+                              </div>
+                            </div>
                           </div>
                         </td>
                         <td className="py-3.5 px-4 text-[#3A3A45] dark:text-[#ECE9F6] font-medium">
@@ -680,17 +715,17 @@ export default function DashboardPage({
                         </td>
                         <td className="py-3.5 px-4">
                           {item.status === "COMPLIANT" && (
-                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#8FD9B6] text-[#2F7A55] dark:bg-[#142E22] dark:text-[#8FD9B6] dark:border dark:border-[#1F4A36]">
+                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#8FD9B6]/20 text-[#2F7A55] dark:bg-[#0E2319] dark:text-[#8FD9B6] border border-[#8FD9B6]/40 dark:border-[#163A29]">
                               CERTIFIED
                             </span>
                           )}
                           {item.status === "REVIEW" && (
-                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#F5D08A] text-[#8A6416] dark:bg-[#33250E] dark:text-[#F5D08A] dark:border dark:border-[#523A14]">
+                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#F5D08A]/20 text-[#8A6416] dark:bg-[#261B0A] dark:text-[#F5D08A] border border-[#F5D08A]/40 dark:border-[#3D2B10]">
                               PENDING REVIEW
                             </span>
                           )}
                           {item.status === "VIOLATION" && (
-                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#F3A6A6] text-[#9B3B3B] dark:bg-[#331818] dark:text-[#F3A6A6] dark:border dark:border-[#522424]">
+                            <span className="inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#F3A6A6]/20 text-[#9B3B3B] dark:bg-[#261212] dark:text-[#F3A6A6] border border-[#F3A6A6]/40 dark:border-[#3D1B1B]">
                               VIOLATION
                             </span>
                           )}
@@ -714,7 +749,7 @@ export default function DashboardPage({
 
         {/* Empty State */}
         {filteredItems.length === 0 && (
-          <div className="bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-lg p-12 text-center my-6">
+          <div className="bg-[#FDFDFF] dark:bg-[#161424] border border-[#E3E1F0] dark:border-[#26223A] rounded-xl p-12 text-center my-6">
             <AlertCircle className="w-10 h-10 text-[#6E6E80] dark:text-[#A29DB8] mx-auto mb-3" />
             <h3 className="text-base font-bold text-[#3A3A45] dark:text-[#ECE9F6]">
               No matching compliance items found
