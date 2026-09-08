@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Bell, Scale, Sun, Moon, Scan } from "lucide-react"
+import { Search, Bell, Scale, Sun, Moon, Scan, LogIn } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
 
 export interface NavbarProps {
@@ -60,7 +60,7 @@ export default function Navbar({
         </nav>
       </div>
 
-      {/* Right: Officer Live Scanner, Search, Dark Mode Switch, Notifications & User Avatar */}
+      {/* Right: Officer Live Scanner, Search, Dark Mode Switch, Notifications, Login & Profile Avatar */}
       <div className="flex items-center gap-3">
         {/* Officer Live Scanner Launcher */}
         <button
@@ -105,6 +105,16 @@ export default function Navbar({
             <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500"></span>
           )}
         </button>
+
+        {/* Officer Login Button */}
+        <Link
+          to="/login"
+          className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-md transition-colors no-underline"
+          title="Officer Sign In"
+        >
+          <LogIn className="w-3.5 h-3.5" />
+          <span>Sign in</span>
+        </Link>
 
         {/* Profile Chip */}
         <div
