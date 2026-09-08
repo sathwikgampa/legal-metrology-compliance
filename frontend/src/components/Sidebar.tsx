@@ -1,5 +1,4 @@
 import React from "react"
-import { useNavigate } from "react-router-dom"
 import { LayoutGrid, AlertCircle, Activity, History, Package } from "lucide-react"
 
 export interface SidebarProps {
@@ -15,8 +14,6 @@ export default function Sidebar({
   activeCategory = "all",
   onSelectCategory,
 }: SidebarProps): React.JSX.Element {
-  const navigate = useNavigate()
-
   const views = [
     { id: "all", label: "All Inspections", count: 124, icon: LayoutGrid },
     { id: "violations", label: "Violations", count: 12, icon: AlertCircle },
@@ -25,17 +22,17 @@ export default function Sidebar({
   ]
 
   const categories = [
-    { id: "food", label: "Food & Groceries" },
-    { id: "cosmetics", label: "Cosmetics" },
-    { id: "electronics", label: "Electronics" },
+    { id: "Food & Groceries", label: "Food & Groceries" },
+    { id: "Cosmetics", label: "Cosmetics" },
+    { id: "Electronics", label: "Electronics" },
   ]
 
   return (
-    <aside className="w-60 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0 select-none">
+    <aside className="w-60 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-4 flex flex-col justify-between shrink-0 select-none transition-colors duration-200">
       <div className="space-y-6">
         {/* VIEWS SECTION */}
         <div>
-          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
             Views
           </div>
           <nav className="space-y-0.5">
@@ -50,18 +47,20 @@ export default function Sidebar({
                   }}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                     isActive
-                      ? "bg-slate-100 text-slate-900 font-bold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-slate-400"}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? "text-slate-900 dark:text-white" : "text-slate-400 dark:text-slate-500"}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.count !== null && (
                     <span
                       className={`text-[11px] px-1.5 py-0.5 rounded font-normal ${
-                        isActive ? "bg-slate-200/70 text-slate-700 font-semibold" : "text-slate-400"
+                        isActive
+                          ? "bg-slate-200/70 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold"
+                          : "text-slate-400 dark:text-slate-500"
                       }`}
                     >
                       {item.count}
@@ -75,7 +74,7 @@ export default function Sidebar({
 
         {/* CATEGORIES SECTION */}
         <div>
-          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
             Categories
           </div>
           <nav className="space-y-0.5">
@@ -91,11 +90,11 @@ export default function Sidebar({
                   }}
                   className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                     isActive
-                      ? "bg-slate-100 text-slate-900 font-bold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50"
                   }`}
                 >
-                  <Package className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-slate-400"}`} />
+                  <Package className={`w-4 h-4 ${isActive ? "text-slate-900 dark:text-white" : "text-slate-400 dark:text-slate-500"}`} />
                   <span>{item.label}</span>
                 </button>
               )

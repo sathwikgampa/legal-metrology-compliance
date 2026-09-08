@@ -12,6 +12,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     try {
       const saved = localStorage.getItem('lm_theme');
       if (saved) return saved === 'dark';
+      return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     } catch (e) {
       // Ignore localStorage errors
     }
