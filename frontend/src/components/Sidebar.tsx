@@ -1,120 +1,107 @@
 import React from "react"
-import { NavLink } from "react-router-dom"
-import { ShieldCheck, LayoutDashboard, PlusCircle, History } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
+import { useNavigate } from "react-router-dom"
+import { LayoutGrid, AlertCircle, Activity, History, Package } from "lucide-react"
 
-interface ScenarioItem {
-  id: string
-  title: string
-  dotClass: string
+export interface SidebarProps {
+  activeView?: string
+  onSelectView?: (view: string) => void
+  activeCategory?: string
+  onSelectCategory?: (category: string) => void
 }
 
-const SCENARIOS: ScenarioItem[] = [
-  { id: "INS-2024-001", title: "1. Fully Compliant", dotClass: "bg-emerald-500" },
-  { id: "INS-2024-002", title: "2. Potential Violation", dotClass: "bg-rose-500" },
-  { id: "INS-2024-003", title: "3. Needs Review", dotClass: "bg-amber-500" },
-  { id: "INS-2024-004", title: "4. Poor Image Quality", dotClass: "bg-slate-400" },
-  { id: "INS-2024-005", title: "5. Low OCR Confidence", dotClass: "bg-orange-400" },
-  { id: "INS-2024-006", title: "6. Multiple Bounding Boxes", dotClass: "bg-teal-400" },
-  { id: "INS-2024-007", title: "7. Multiple Package Images", dotClass: "bg-cyan-400" },
-]
+export default function Sidebar({
+  activeView = "all",
+  onSelectView,
+  activeCategory = "all",
+  onSelectCategory,
+}: SidebarProps): React.JSX.Element {
+  const navigate = useNavigate()
 
-export default function Sidebar(): React.JSX.Element {
+  const views = [
+    { id: "all", label: "All Inspections", count: 124, icon: LayoutGrid },
+    { id: "violations", label: "Violations", count: 12, icon: AlertCircle },
+    { id: "review", label: "Pending Review", count: 8, icon: Activity },
+    { id: "audit_log", label: "Audit Log", count: null, icon: History },
+  ]
+
+  const categories = [
+    { id: "food", label: "Food & Groceries" },
+    { id: "cosmetics", label: "Cosmetics" },
+    { id: "electronics", label: "Electronics" },
+  ]
+
   return (
-    <aside className="w-60 bg-card border-r border-border p-4 flex flex-col space-y-5 transition-colors shrink-0 select-none shadow-xs">
-      {/* Primary Navigation */}
-      <div>
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-          Navigation
-        </p>
-        <nav className="space-y-1">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              cn(
-                "flex items-center space-x-2.5 text-xs font-medium px-3 py-2 rounded-md transition-colors",
-                isActive
-                  ? "bg-primary/10 text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
-              )
-            }
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            <span>Dashboard</span>
-          </NavLink>
-
-          <NavLink
-            to="/inspections/new"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center space-x-2.5 text-xs font-medium px-3 py-2 rounded-md transition-colors",
-                isActive
-                  ? "bg-primary/10 text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
-              )
-            }
-          >
-            <PlusCircle className="h-4 w-4" />
-            <span>New Inspection</span>
-          </NavLink>
-
-          <NavLink
-            to="/history"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center space-x-2.5 text-xs font-medium px-3 py-2 rounded-md transition-colors",
-                isActive
-                  ? "bg-primary/10 text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
-              )
-            }
-          >
-            <History className="h-4 w-4" />
-            <span>Inspection History</span>
-          </NavLink>
-        </nav>
-      </div>
-
-      <Separator className="bg-border/60" />
-
-      {/* Test Scenarios Section */}
-      <div>
-        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-          Test Scenarios (Mock Cases)
-        </p>
-        <ul className="space-y-1">
-          {SCENARIOS.map((item) => (
-            <li key={item.id}>
-              <NavLink
-                to={`/inspections/${item.id}`}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center space-x-2 text-xs py-1.5 px-2 rounded-md transition-colors",
+    <aside className="w-60 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0 select-none">
+      <div className="space-y-6">
+        {/* VIEWS SECTION */}
+        <div>
+          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            Views
+          </div>
+          <nav className="space-y-0.5">
+            {views.map((item) => {
+              const Icon = item.icon
+              const isActive = activeView === item.id
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (onSelectView) onSelectView(item.id)
+                  }}
+                  className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                     isActive
-                      ? "bg-accent text-accent-foreground font-semibold"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                  )
-                }
-              >
-                <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", item.dotClass)} />
-                <span className="truncate">{item.title}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Sidebar Footer & System Status */}
-      <div className="mt-auto pt-3 border-t border-border/60 text-[10px] text-muted-foreground space-y-1">
-        <div className="flex items-center space-x-1.5 font-medium text-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-          <span>Engine: Active (Rules 2011)</span>
+                      ? "bg-slate-100 text-slate-900 font-bold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Icon className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-slate-400"}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.count !== null && (
+                    <span
+                      className={`text-[11px] px-1.5 py-0.5 rounded font-normal ${
+                        isActive ? "bg-slate-200/70 text-slate-700 font-semibold" : "text-slate-400"
+                      }`}
+                    >
+                      {item.count}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </nav>
         </div>
-        <p className="text-[9px] leading-tight text-muted-foreground/80">
-          Statutory inspection assistant. Officer determination is legally binding.
-        </p>
+
+        {/* CATEGORIES SECTION */}
+        <div>
+          <div className="px-2 pb-2 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+            Categories
+          </div>
+          <nav className="space-y-0.5">
+            {categories.map((item) => {
+              const isActive = activeCategory === item.id
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (onSelectCategory) {
+                      onSelectCategory(isActive ? "all" : item.id)
+                    }
+                  }}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-slate-100 text-slate-900 font-bold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  }`}
+                >
+                  <Package className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-slate-400"}`} />
+                  <span>{item.label}</span>
+                </button>
+              )
+            })}
+          </nav>
+        </div>
       </div>
     </aside>
   )

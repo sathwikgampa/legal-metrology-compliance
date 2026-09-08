@@ -1,32 +1,13 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Moon, Sun, ChevronDown, User, Shield, LogOut, Plus } from "lucide-react"
-import { useTheme } from "../context/ThemeContext"
-import { setSimulateNetworkError, getSimulateNetworkError } from "../services/api"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import MagneticButton from "@/components/react-bits/MagneticButton"
+import { Search, Bell, Scale } from "lucide-react"
 
 export default function Navbar(): React.JSX.Element {
   const navigate = useNavigate()
-  const { isDarkMode, toggleTheme } = useTheme()
-  const [errorSimulated, setErrorSimulated] = useState<boolean>(getSimulateNetworkError())
+  const [activeTab, setActiveTab] = useState<string>("Inspections")
   const [searchQuery, setSearchQuery] = useState<string>("")
 
-  const handleToggleError = (checked: boolean) => {
-    setErrorSimulated(checked)
-    setSimulateNetworkError(checked)
-  }
+  const tabs = ["Inspections", "Entities", "Analytics", "Settings"]
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -36,115 +17,60 @@ export default function Navbar(): React.JSX.Element {
   }
 
   return (
-    <header className="bg-card border-b border-border h-16 min-h-16 px-6 flex items-center justify-between transition-colors sticky top-0 z-40 shadow-xs">
-      {/* Left: Logo & Title */}
-      <Link to="/" className="flex items-center space-x-3 group text-foreground no-underline select-none">
-        <div className="text-primary text-xl font-bold transition-transform group-hover:scale-105">⚖️</div>
-        <div>
-          <h1 className="text-sm font-bold tracking-tight text-foreground">
-            Legal Metrology Inspection System
-          </h1>
-          <p className="text-[10px] text-muted-foreground font-medium">
-            Department of Consumer Affairs • Packaged Commodities (2011)
-          </p>
-        </div>
-      </Link>
+    <header className="bg-white border-b border-slate-200 h-14 min-h-14 px-4 lg:px-6 flex items-center justify-between sticky top-0 z-40 select-none">
+      {/* Left: Brand Crest & Title */}
+      <div className="flex items-center gap-6">
+        <Link to="/" className="flex items-center gap-2.5 no-underline">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs">
+            <Scale className="w-4 h-4" />
+          </div>
+          <span className="font-extrabold text-sm tracking-tight text-slate-900">
+            Legal Metrology
+          </span>
+        </Link>
 
-      {/* Center: Search Bar with shadcn Input */}
-      <div className="w-96 max-w-xs sm:max-w-md mx-4">
-        <form onSubmit={handleSearchSubmit} className="relative w-full flex items-center">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
-          <Input
-            type="text"
-            placeholder="Search inspections, dockets, brands..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 bg-muted/40 focus-visible:bg-background h-8 text-xs border-border"
-          />
-        </form>
+        {/* Center: Horizontal Navigation Tabs */}
+        <nav className="hidden md:flex items-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200/80">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+                activeTab === tab
+                  ? "bg-white text-slate-900 font-semibold shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/50"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </nav>
       </div>
 
-      {/* Right: Quick Controls, Theme Switch, Profile Dropdown, Main Action */}
-      <div className="flex items-center space-x-3 sm:space-x-4">
-        {/* Simulate API Failure Toggle */}
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="simulate-api-failure"
-            checked={errorSimulated}
-            onCheckedChange={(checked) => handleToggleError(Boolean(checked))}
+      {/* Right: Search, Notifications & User Avatar */}
+      <div className="flex items-center gap-3">
+        {/* Search Bar */}
+        <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-56">
+          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search GTIN, Docket..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:bg-white transition-colors"
           />
-          <Label
-            htmlFor="simulate-api-failure"
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden sm:inline"
-          >
-            Simulate API Failure
-          </Label>
+        </form>
+
+        {/* Bell Notification */}
+        <button className="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer" title="Notifications">
+          <Bell className="w-4 h-4" />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+        </button>
+
+        {/* Profile Chip */}
+        <div className="w-7 h-7 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center cursor-pointer hover:bg-slate-200 transition-colors select-none">
+          SS
         </div>
-
-        {/* Clean Theme Toggle Button */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={toggleTheme}
-          className="h-8 w-8 rounded-md border-border text-foreground hover:bg-muted"
-          title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          aria-label="Toggle theme"
-        >
-          {isDarkMode ? <Sun className="h-4 w-4 text-amber-500" /> : <Moon className="h-4 w-4" />}
-        </Button>
-
-        {/* Officer Profile with shadcn DropdownMenu */}
-        <div className="border-l border-border pl-3 sm:pl-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="flex items-center space-x-2 px-2 py-1 h-auto hover:bg-muted rounded-lg"
-              >
-                <div className="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-xs ring-1 ring-primary/20 select-none">
-                  SS
-                </div>
-                <div className="hidden md:block text-left">
-                  <div className="text-xs font-semibold text-foreground leading-tight">Inspector S. Sharma</div>
-                  <div className="text-[10px] text-muted-foreground">Zone 4 • Enforcement</div>
-                </div>
-                <ChevronDown className="h-3 w-3 text-muted-foreground ml-1" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="font-semibold text-xs">Inspector S. Sharma</div>
-                <div className="text-[10px] text-muted-foreground font-normal">Officer ID: LM-ZONE4-8821</div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate("/history")}>
-                <Shield className="mr-2 h-3.5 w-3.5 text-primary" />
-                <span>Zone 4 Jurisdiction</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/inspections/new")}>
-                <User className="mr-2 h-3.5 w-3.5" />
-                <span>Active Audits</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                <LogOut className="mr-2 h-3.5 w-3.5" />
-                <span>Sign Out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        {/* High-priority Action Button with Magnetic Micro-Interaction */}
-        <MagneticButton distance={0.15}>
-          <Button
-            size="sm"
-            onClick={() => navigate("/inspections/new")}
-            className="shadow-sm font-semibold text-xs px-3 py-1.5 h-8 gap-1.5"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>New Inspection</span>
-          </Button>
-        </MagneticButton>
       </div>
     </header>
   )

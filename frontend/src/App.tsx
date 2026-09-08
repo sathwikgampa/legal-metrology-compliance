@@ -11,27 +11,31 @@ import ReviewPage from "./pages/ReviewPage"
 import "./App.css"
 
 export default function App(): React.JSX.Element {
+  const [activeView, setActiveView] = React.useState<string>("all")
+  const [activeCategory, setActiveCategory] = React.useState<string>("all")
+
   return (
     <ThemeProvider>
       <BrowserRouter>
         <div
-          className="bg-background text-foreground font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
+          className="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col"
           id="app-body"
         >
           <Navbar />
           <div className="flex flex-1 overflow-hidden">
-            <Sidebar />
-            <main
-              className="flex-1 overflow-y-auto bg-muted/20 transition-colors"
-              id="main-content"
-            >
+            <Sidebar
+              activeView={activeView}
+              onSelectView={setActiveView}
+              activeCategory={activeCategory}
+              onSelectCategory={setActiveCategory}
+            />
+            <main className="flex-1 overflow-hidden" id="main-content">
               <Routes>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/inspections/new" element={<NewInspectionPage />} />
                 <Route path="/inspections/:id" element={<InspectionResultPage />} />
                 <Route path="/inspections/:id/review" element={<ReviewPage />} />
                 <Route path="/history" element={<HistoryPage />} />
-                {/* Fallback to Dashboard */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>

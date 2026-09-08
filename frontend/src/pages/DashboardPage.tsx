@@ -1,318 +1,359 @@
-import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { Calendar, Download, Info, ArrowRight, X, AlertTriangle, CheckCircle2 } from "lucide-react"
-import DashboardCards from "@/components/DashboardCards"
-import InspectionTable, { type InspectionRecord } from "@/components/InspectionTable"
-import LoadingState from "@/components/LoadingState"
-import ErrorState from "@/components/ErrorState"
-import { getDashboardStats, getInspectionHistory } from "@/services/api"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import SpotlightCard from "@/components/react-bits/SpotlightCard"
-import BlurText from "@/components/react-bits/BlurText"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { Filter, Download, Plus, AlertCircle, X, MoreHorizontal, HelpCircle } from "lucide-react"
 
-interface CategoryStat {
-  category: string
-  count: number
-  violations: number
+interface DocketItem {
+  id: string
+  timestamp: string
+  manufacturer: string
+  product: string
+  status: "VIOLATION" | "COMPLIANT" | "REVIEW"
+  rule_violation?: string
+  gtin: string
+  confidence: number
 }
 
-interface DashboardStats {
-  total_inspections: number
-  compliant: number
-  potential_violations: number
-  needs_review: number
-  category_breakdown: CategoryStat[]
-}
+const DOCKET_ITEMS: DocketItem[] = [
+  {
+    id: "INS-8901",
+    timestamp: "Oct 14, 13:45",
+    manufacturer: "Crispy Munch Ltd.",
+    product: "Classic Potato Crisps 120g",
+    status: "VIOLATION",
+    rule_violation: "Rule 6(1)(e) - Missing MRP",
+    gtin: "008901030",
+    confidence: 94.1,
+  },
+  {
+    id: "INS-8902",
+    timestamp: "Oct 14, 11:20",
+    manufacturer: "Shree Bhog Foods",
+    product: "Fortified Wheat Atta 5kg",
+    status: "COMPLIANT",
+    gtin: "008901031",
+    confidence: 98.4,
+  },
+  {
+    id: "INS-8903",
+    timestamp: "Oct 14, 09:15",
+    manufacturer: "Botanica Care India",
+    product: "Radiance Face Serum 30ml",
+    status: "REVIEW",
+    rule_violation: "Rule 6(1)(c) - Net Qty Glare",
+    gtin: "008901032",
+    confidence: 62.8,
+  },
+  {
+    id: "INS-8904",
+    timestamp: "Oct 13, 16:30",
+    manufacturer: "Assam Gold Tea Co.",
+    product: "Premium Tea Leaves 500g",
+    status: "VIOLATION",
+    rule_violation: "Rule 6(1)(a) - Country of Origin Missing",
+    gtin: "008901033",
+    confidence: 91.0,
+  },
+  {
+    id: "INS-8905",
+    timestamp: "Oct 13, 14:00",
+    manufacturer: "Aqua Pure Beverages",
+    product: "Mineral Water 1L",
+    status: "COMPLIANT",
+    gtin: "008901034",
+    confidence: 99.1,
+  },
+]
 
 export default function DashboardPage(): React.JSX.Element {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [recentInspections, setRecentInspections] = useState<InspectionRecord[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const [alertDismissed, setAlertDismissed] = useState<boolean>(false)
-  const [dateFilterActive, setDateFilterActive] = useState<boolean>(false)
+  const navigate = useNavigate()
+  const [selectedDocket, setSelectedDocket] = useState<DocketItem | null>(DOCKET_ITEMS[0])
+  const [activeViewFilter, setActiveViewFilter] = useState<string>("all")
 
-  const loadData = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const [statsRes, historyRes] = await Promise.all([
-        getDashboardStats(),
-        getInspectionHistory(),
-      ])
-      setStats(statsRes)
-      setRecentInspections(historyRes.slice(0, 5))
-    } catch (err: any) {
-      setError(err?.message || "Failed to load dashboard metrics.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadData()
-  }, [])
+  const filteredItems = DOCKET_ITEMS.filter((item) => {
+    if (activeViewFilter === "violations" && item.status !== "VIOLATION") return false
+    if (activeViewFilter === "review" && item.status !== "REVIEW") return false
+    return true
+  })
 
   const handleExportCSV = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      "Docket ID,Commodity,Category,Compliance Status,OCR Confidence\n" +
-      "INS-2024-001,Heritage Basmati Rice,Food & Grains,COMPLIANT,98%\n" +
-      "INS-2024-002,Spiced Namkeen,Snacks,POTENTIAL_VIOLATION,94%\n" +
-      "INS-2024-003,Dark Cocoa Nibs,Food & Grains,NEEDS_REVIEW,62%\n" +
-      "INS-2024-004,Pure Almond Beverage,Food & Grains,POOR_IMAGE_QUALITY,34%\n" +
-      "INS-2024-005,Cold Pressed Olive Oil,Food & Grains,LOW_CONFIDENCE,48%\n" +
-      "INS-2024-006,Ultra Clean Detergent,Household,COMPLIANT,96%\n" +
-      "INS-2024-007,Herbal Shampoo,Cosmetics,COMPLIANT,95%\n"
+      "Docket ID,Timestamp,Manufacturer,Product,Status,GTIN\n" +
+      DOCKET_ITEMS.map(
+        (i) => `${i.id},${i.timestamp},"${i.manufacturer}","${i.product}",${i.status},${i.gtin}`
+      ).join("\n")
 
     const encodedUri = encodeURI(csvContent)
     const link = document.createElement("a")
     link.setAttribute("href", encodedUri)
-    link.setAttribute("download", "legal_metrology_inspections_zone4.csv")
+    link.setAttribute("download", "inspections_ledger.csv")
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
   }
 
-  if (loading) {
-    return (
-      <LoadingState
-        message="Loading Enforcement Dashboard..."
-        subtext="Retrieving inspection metrics from Legal Metrology service..."
-      />
-    )
-  }
-
-  if (error) {
-    return <ErrorState message={error} onRetry={loadData} />
-  }
-
-  // Calculate percentage breakdown for visual bar chart
-  const total = stats?.total_inspections || 1
-  const compliantPct = Math.round(((stats?.compliant || 0) / total) * 100)
-  const violationPct = Math.round(((stats?.potential_violations || 0) / total) * 100)
-  const reviewPct = Math.round(((stats?.needs_review || 0) / total) * 100)
-
   return (
-    <div className="p-6 space-y-6 max-w-[1400px] mx-auto">
-      {/* Dashboard Title Block & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-        <div>
-          <h2 className="text-xl font-bold text-foreground tracking-tight flex items-center">
-            <BlurText text="Compliance Dashboard" delay={40} className="font-extrabold" />
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Legal Metrology (Packaged Commodities) Rules, 2011 • Enforcement & Regulatory Analytics
-          </p>
+    <div className="flex flex-1 h-[calc(100vh-3.5rem)] overflow-hidden bg-slate-50">
+      {/* Main Ledger Content Area */}
+      <div className="flex-1 flex flex-col p-6 overflow-y-auto min-w-0">
+        {/* Title Header & Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Inspections Ledger</h1>
+            <p className="text-xs text-slate-500 mt-1">Real-time telemetry and compliance audit logs.</p>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={() => setActiveViewFilter(activeViewFilter === "all" ? "violations" : "all")}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors cursor-pointer ${
+                activeViewFilter !== "all"
+                  ? "bg-slate-900 text-white border-slate-900"
+                  : "bg-white border-slate-200 hover:bg-slate-50 text-slate-700 shadow-2xs"
+              }`}
+            >
+              <Filter className="w-3.5 h-3.5" />
+              <span>Filter</span>
+            </button>
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export</span>
+            </button>
+            <button
+              onClick={() => navigate("/inspections/new")}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Run Manual Scan</span>
+            </button>
+          </div>
         </div>
 
-        {/* Secondary Action Controls using shadcn Button */}
-        <div className="flex items-center space-x-2">
-          <Button
-            variant={dateFilterActive ? "default" : "outline"}
-            size="sm"
-            onClick={() => setDateFilterActive(!dateFilterActive)}
-            className="text-xs h-8 gap-1.5"
-            title="Filter dashboard records by date range"
-          >
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{dateFilterActive ? "Last 30 Days (Active)" : "Filter Date Range"}</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportCSV}
-            className="text-xs h-8 gap-1.5"
-            title="Export audit records to CSV spreadsheet"
-          >
-            <Download className="h-3.5 w-3.5" />
-            <span>Export CSV</span>
-          </Button>
-        </div>
-      </div>
-
-      {/* Top 4 KPI Metrics Cards Grid */}
-      <DashboardCards stats={stats} />
-
-      {/* Main Interface Data Grid Split (2/3 and 1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Side: Status Distribution Card (2/3 Width) */}
-        <SpotlightCard
-          spotlightColor="rgba(37, 99, 235, 0.07)"
-          className="lg:col-span-2 rounded-xl border border-border bg-card shadow-xs"
-        >
-          <Card className="border-0 bg-transparent shadow-none h-full flex flex-col justify-between">
-            <CardHeader className="p-5 pb-3">
-              <CardTitle className="text-sm font-bold text-foreground">
-                Compliance Status Distribution
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">
-                Aggregate statutory packaging audits across active jurisdiction
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="p-5 pt-0 space-y-5">
-              {/* Flat Progress Graph Segment Graphic */}
-              <div
-                className="w-full h-3.5 rounded-full overflow-hidden flex bg-muted shadow-inner"
-                role="progressbar"
-                aria-label="Compliance Status Distribution"
-              >
-                <div
-                  className="bg-emerald-500 h-full transition-all duration-300"
-                  style={{ width: `${compliantPct}%` }}
-                  title={`Compliant (${compliantPct}%)`}
-                />
-                <div
-                  className="bg-rose-500 h-full transition-all duration-300"
-                  style={{ width: `${violationPct}%` }}
-                  title={`Violations (${violationPct}%)`}
-                />
-                <div
-                  className="bg-amber-500 h-full transition-all duration-300"
-                  style={{ width: `${reviewPct}%` }}
-                  title={`Needs Review (${reviewPct}%)`}
-                />
-              </div>
-
-              {/* Clean Distributed Legend */}
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs" />
-                  <div>
-                    <div className="font-semibold text-foreground text-xs">Emerald Green</div>
-                    <div className="text-[10px] text-muted-foreground">Compliant ({compliantPct}%)</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 shadow-xs" />
-                  <div>
-                    <div className="font-semibold text-foreground text-xs">Soft Crimson</div>
-                    <div className="text-[10px] text-muted-foreground">Violations ({violationPct}%)</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs" />
-                  <div>
-                    <div className="font-semibold text-foreground text-xs">Warm Amber</div>
-                    <div className="text-[10px] text-muted-foreground">Needs Review ({reviewPct}%)</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Statutory Enforcement Advisory using shadcn Alert */}
-              {!alertDismissed && (
-                <Alert variant="advisory" className="mt-4 relative pr-9">
-                  <Info className="h-4 w-4" />
-                  <div className="space-y-0.5">
-                    <AlertTitle className="text-xs font-bold">
-                      Statutory Enforcement Advisory
-                    </AlertTitle>
-                    <AlertDescription className="text-[11px] leading-relaxed">
-                      Packages flagged with potential violations require formal notice issuance under Rule 32. Packages under review warrant secondary visual verification before formal compounding.
-                    </AlertDescription>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setAlertDismissed(true)}
-                    className="absolute right-2 top-2 h-6 w-6 text-blue-600 dark:text-blue-400 hover:bg-blue-100/50 dark:hover:bg-blue-900/50"
-                    aria-label="Dismiss statutory advisory"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </Button>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
-        </SpotlightCard>
-
-        {/* Right Side: Category Audit Breakdown Card (1/3 Width) */}
-        <SpotlightCard
-          spotlightColor="rgba(16, 185, 129, 0.07)"
-          className="rounded-xl border border-border bg-card shadow-xs"
-        >
-          <Card className="border-0 bg-transparent shadow-none">
-            <CardHeader className="p-5 pb-3">
-              <CardTitle className="text-sm font-bold text-foreground">
-                Category Audit Breakdown
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground">
-                Commodity inspection records categorized by product sector
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="p-5 pt-0">
-              <div className="divide-y divide-border/60 text-xs">
-                {(stats?.category_breakdown || [
-                  { category: "Food & Grains", count: 5, violations: 1 },
-                  { category: "Snacks", count: 1, violations: 1 },
-                  { category: "Cosmetics", count: 1, violations: 0 },
-                  { category: "Household", count: 1, violations: 0 },
-                ]).map((cat, idx) => (
-                  <div key={idx} className="py-3 flex items-center justify-between first:pt-1 last:pb-1">
-                    <div>
-                      <div className="font-semibold text-foreground text-xs">{cat.category}</div>
-                      <div className="text-[10px] text-muted-foreground">
-                        {cat.count} package{cat.count === 1 ? "" : "s"} audited
-                      </div>
-                    </div>
-                    {cat.violations > 0 ? (
-                      <Badge variant="violation" size="sm" className="gap-1 font-semibold">
-                        <AlertTriangle className="h-3 w-3" />
-                        <span>{cat.violations} Non-Compliant</span>
-                      </Badge>
-                    ) : (
-                      <Badge variant="compliant" size="sm" className="gap-1 font-semibold">
-                        <CheckCircle2 className="h-3 w-3" />
-                        <span>Compliant</span>
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </SpotlightCard>
-      </div>
-
-      {/* Recent Inspections Ledger Card using shadcn Card */}
-      <SpotlightCard
-        spotlightColor="rgba(37, 99, 235, 0.06)"
-        className="rounded-xl border border-border bg-card shadow-xs"
-      >
-        <Card className="border-0 bg-transparent shadow-none">
-          <CardHeader className="p-5 pb-3 flex flex-row items-center justify-between space-y-0">
-            <div>
-              <CardTitle className="text-sm font-bold text-foreground">
-                Recent Inspection Audits
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground mt-0.5">
-                Latest packaging verifications conducted in Zone 4
-              </CardDescription>
+        {/* 4 Metric KPI Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {/* Card 1: Total Scans */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2">
+            <div className="text-xs font-medium text-slate-500">Total Scans (24h)</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-slate-900 tracking-tight">1,284</span>
+              <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">
+                +12.5%
+              </span>
             </div>
-            <Button variant="ghost" size="sm" asChild className="gap-1 text-xs font-semibold text-primary">
-              <Link to="/history">
-                <span>View All Inspections History</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </CardHeader>
+          </div>
 
-          <CardContent className="p-5 pt-0">
-            <InspectionTable
-              inspections={recentInspections}
-              emptyMessage="No recent inspections available."
-            />
-          </CardContent>
-        </Card>
-      </SpotlightCard>
+          {/* Card 2: Compliance Rate */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2">
+            <div className="text-xs font-medium text-slate-500">Compliance Rate</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-slate-900 tracking-tight">84.2%</span>
+              <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded">
+                +2.1%
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: Flagged Violations */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2">
+            <div className="text-xs font-medium text-slate-500">Flagged Violations</div>
+            <div className="text-2xl font-bold text-rose-600 tracking-tight">12</div>
+          </div>
+
+          {/* Card 4: Pending Review */}
+          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-2xs space-y-2">
+            <div className="text-xs font-medium text-slate-500">Pending Review</div>
+            <div className="text-2xl font-bold text-slate-900 tracking-tight">8</div>
+          </div>
+        </div>
+
+        {/* Inspections Ledger Table */}
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs flex-1">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50/50 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="py-3 px-4" scope="col">DOCKET ID</th>
+                  <th className="py-3 px-4" scope="col">TIMESTAMP</th>
+                  <th className="py-3 px-4" scope="col">ENTITY / PRODUCT</th>
+                  <th className="py-3 px-4" scope="col">STATUS</th>
+                  <th className="py-3 px-4 text-right" scope="col">CONFIDENCE</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-xs">
+                {filteredItems.map((item) => {
+                  const isSelected = selectedDocket?.id === item.id
+                  return (
+                    <tr
+                      key={item.id}
+                      onClick={() => setSelectedDocket(item)}
+                      className={`cursor-pointer transition-colors ${
+                        isSelected ? "bg-slate-100/70" : "hover:bg-slate-50"
+                      }`}
+                    >
+                      <td className="py-3.5 px-4 font-mono font-medium text-slate-800">
+                        {item.id}
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-500">
+                        {item.timestamp}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <div className="font-bold text-slate-900">{item.manufacturer}</div>
+                        <div className="text-[11px] text-slate-500 mt-0.5">{item.product}</div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        {item.status === "VIOLATION" && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                            Violation
+                          </span>
+                        )}
+                        {item.status === "COMPLIANT" && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                            Compliant
+                          </span>
+                        )}
+                        {item.status === "REVIEW" && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            Review
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-right font-medium text-slate-600">
+                        {item.confidence}%
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Drawer Panel: Docket Details */}
+      {selectedDocket && (
+        <div className="w-96 bg-white border-l border-slate-200 p-5 flex flex-col justify-between shrink-0 shadow-lg relative z-20">
+          <div className="space-y-5">
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-bold text-slate-900">Docket Details</h3>
+                <span className="font-mono text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-medium">
+                  {selectedDocket.id}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 text-slate-400">
+                <button className="p-1 hover:text-slate-600 rounded transition-colors cursor-pointer">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSelectedDocket(null)}
+                  className="p-1 hover:text-slate-600 rounded transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Violation Alert Banner */}
+            {selectedDocket.status === "VIOLATION" ? (
+              <div className="bg-rose-50/80 border border-rose-200/80 rounded-xl p-4 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold text-xs text-rose-950">
+                    Statutory Violation Detected
+                  </div>
+                  <div className="text-xs text-rose-700 font-semibold mt-0.5">
+                    {selectedDocket.rule_violation || "Rule 6(1)(e) - Missing MRP"}
+                  </div>
+                </div>
+              </div>
+            ) : selectedDocket.status === "REVIEW" ? (
+              <div className="bg-amber-50/80 border border-amber-200/80 rounded-xl p-4 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-bold text-xs text-amber-950">
+                    Officer Verification Needed
+                  </div>
+                  <div className="text-xs text-amber-700 font-semibold mt-0.5">
+                    {selectedDocket.rule_violation || "Low OCR confidence on net quantity"}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-4 flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 mt-1.5"></span>
+                <div>
+                  <div className="font-bold text-xs text-emerald-950">
+                    Statutory Compliance Verified
+                  </div>
+                  <div className="text-xs text-emerald-700 font-medium mt-0.5">
+                    All mandatory Rule 6 declarations verified cleanly.
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ENTITY INFORMATION */}
+            <div>
+              <div className="text-[11px] font-bold text-slate-400 tracking-wider uppercase mb-3">
+                Entity Information
+              </div>
+              <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
+                <div>
+                  <div className="text-[11px] text-slate-400 font-medium">Manufacturer</div>
+                  <div className="font-bold text-slate-900 mt-0.5">
+                    {selectedDocket.manufacturer}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] text-slate-400 font-medium">Product</div>
+                  <div className="font-bold text-slate-900 mt-0.5">
+                    {selectedDocket.product}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] text-slate-400 font-medium">GTIN / Barcode</div>
+                  <div className="font-mono font-bold text-slate-800 mt-0.5">
+                    {selectedDocket.gtin}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-[11px] text-slate-400 font-medium">Inspection Time</div>
+                  <div className="text-slate-600 font-medium mt-0.5">
+                    {selectedDocket.timestamp}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons Footer */}
+          <div className="pt-4 border-t border-slate-100 flex items-center gap-2">
+            <button
+              onClick={() => navigate(`/inspections/${selectedDocket.id}`)}
+              className="flex-1 py-2 px-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs transition-colors cursor-pointer text-center"
+            >
+              Override Analysis
+            </button>
+            <button
+              onClick={() => navigate(`/inspections/${selectedDocket.id}/review`)}
+              className="flex-1 py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer text-center"
+            >
+              Issue Formal Notice
+            </button>
+          </div>
+
+          {/* Floating ? Help Icon */}
+          <button className="absolute bottom-4 right-4 w-7 h-7 bg-slate-900 text-white rounded-full flex items-center justify-center text-xs shadow-md hover:bg-slate-800 cursor-pointer">
+            <HelpCircle className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   )
 }
