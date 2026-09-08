@@ -185,7 +185,10 @@ export default function Navbar({
                 <button
                   key={tab}
                   type="button"
-                  onClick={() => onSelectTab(tab)}
+                  onClick={() => {
+                    onSelectTab?.(tab)
+                    navigate("/")
+                  }}
                   className={`px-3.5 py-1.5 text-xs rounded-lg transition-all cursor-pointer ${
                     isActive
                       ? "bg-[#EDEBFB] dark:bg-[#2A2544] text-[#7C6FE0] font-bold shadow-xs"
@@ -216,21 +219,6 @@ export default function Navbar({
 
       {/* Right: Quick Controls, Theme Switch, Notifications, Profile Dropdown, Main Action */}
       <div className="flex items-center space-x-2.5 sm:space-x-3.5">
-        {/* Simulate API Failure Toggle */}
-        <div className="hidden sm:flex items-center space-x-2">
-          <Checkbox
-            id="simulate-api-failure"
-            checked={errorSimulated}
-            onCheckedChange={(checked) => handleToggleError(Boolean(checked))}
-          />
-          <Label
-            htmlFor="simulate-api-failure"
-            className="text-xs text-[#6E6E80] dark:text-[#A29DB8] hover:text-foreground transition-colors cursor-pointer"
-          >
-            Simulate Failure
-          </Label>
-        </div>
-
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleTheme}
