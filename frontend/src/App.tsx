@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { ThemeProvider } from "./context/ThemeContext"
 import { AuthProvider } from "./context/AuthContext"
+import { NotificationProvider } from "./context/NotificationContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Navbar from "./components/Navbar"
 import Sidebar from "./components/Sidebar"
@@ -20,10 +21,11 @@ function AppLayout(): React.JSX.Element {
   const [activeView, setActiveView] = useState<string>("all")
   const [activeCategory, setActiveCategory] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState<string>("")
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false)
 
   return (
     <div
-      className="bg-background text-foreground font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
+      className="bg-[#F8F7FC] dark:bg-[#0F0E17] text-[#3A3A45] dark:text-[#ECE9F6] font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
       id="app-body"
     >
       <Navbar
@@ -31,18 +33,39 @@ function AppLayout(): React.JSX.Element {
         onSelectTab={setActiveTab}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
       />
-      <div className="flex flex-1 overflow-hidden">
+
+      {/* Slide-over Sidebar Drawer with Backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 transition-opacity duration-300 animate-in fade-in"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <div
+        className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          activeTab={activeTab}
+          onSelectTab={(tab) => {
+            setActiveTab(tab)
+            setIsSidebarOpen(false)
+          }}
           activeView={activeView}
           onSelectView={setActiveView}
           activeCategory={activeCategory}
           onSelectCategory={setActiveCategory}
         />
-        <main
-          className="flex-1 overflow-y-auto bg-muted/20 transition-colors"
-          id="main-content"
-        >
+      </div>
+
+      <div className="flex flex-1 overflow-hidden w-full">
+        <main className="flex-1 overflow-hidden w-full" id="main-content">
           <Routes>
             {/* Compliance Dashboard - Accessible to all roles */}
             <Route
@@ -97,24 +120,26 @@ export default function App(): React.JSX.Element {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Authentication Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <NotificationProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Public Authentication Routes */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-            {/* Protected Statutory Application Shell */}
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+              {/* Protected Statutory Application Shell */}
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
   )
