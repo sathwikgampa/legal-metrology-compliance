@@ -1,21 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-from sqlalchemy.orm import Session
+from pymongo.database import Database
 from typing import Dict, Any, Optional
-from backend.app.database.database import get_db
-from backend.app.services.compliance_engine import evaluate_compliance
-from backend.app.services.product_parser import parse_ocr_to_product_profile
-from backend.app.services.inspection_service import create_inspection_record
+from app.database.database import get_db
+from app.services.compliance_engine import evaluate_compliance
+from app.services.product_parser import parse_ocr_to_product_profile
+from app.services.inspection_service import create_inspection_record
 
 router = APIRouter(prefix="", tags=["Analyze"])
 
 @router.post("/analyze")
 async def analyze_package(
     payload: Dict[str, Any] = Body(default={}),
-    db: Session = Depends(get_db)
+    db: Database = Depends(get_db)
 ):
     """
     Analyzes raw OCR text or Product Profile payload, runs compliance rules engine,
-    saves the inspection record in SQLite DB, and returns evaluation.
+    saves the inspection record in MongoDB, and returns evaluation.
     """
     ocr_result = payload.get("ocr_result")
     product_profile = payload.get("product_profile")

@@ -6,10 +6,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.database.tables import init_db
-from backend.app.routes.analyze import router as analyze_router
-from backend.app.routes.inspection import router as inspection_router
-from backend.app.routes.dashboard import router as dashboard_router
+from app.database.tables import init_db
+from app.routes.analyze import router as analyze_router
+from app.routes.inspection import router as inspection_router
+from app.routes.dashboard import router as dashboard_router
 
 app = FastAPI(
     title="Legal Metrology Compliance System API",

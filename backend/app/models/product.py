@@ -1,20 +1,16 @@
-import uuid
-from sqlalchemy import Column, String, Text
-from sqlalchemy.orm import relationship
-from backend.app.database.database import Base
+from dataclasses import dataclass, field
+from typing import List
 
-class Product(Base):
-    __tablename__ = "products"
-
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    product_name = Column(String, nullable=True, default="")
-    manufacturer = Column(String, nullable=True, default="")
-    packer = Column(String, nullable=True, default="")
-    importer = Column(String, nullable=True, default="")
-    net_quantity = Column(String, nullable=True, default="")
-    mrp = Column(String, nullable=True, default="")
-    date = Column(String, nullable=True, default="")
-    consumer_care = Column(Text, nullable=True, default="")
-    country_of_origin = Column(String, nullable=True, default="")
-
-    inspections = relationship("Inspection", back_populates="product", cascade="all, delete-orphan")
+@dataclass
+class Product:
+    id: str
+    product_name: str = ""
+    manufacturer: str = ""
+    packer: str = ""
+    importer: str = ""
+    net_quantity: str = ""
+    mrp: str = ""
+    date: str = ""
+    consumer_care: str = ""
+    country_of_origin: str = ""
+    inspections: List[object] = field(default_factory=list)
