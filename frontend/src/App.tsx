@@ -30,7 +30,7 @@ function AppContent() {
 
   return (
     <div
-      className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
+      className="bg-[#F8F7FC] dark:bg-[#13111C] text-[#3A3A45] dark:text-[#ECE9F6] font-sans antialiased min-h-screen flex flex-col transition-colors duration-200"
       id="app-body"
     >
       <Navbar
@@ -41,6 +41,8 @@ function AppContent() {
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
           activeView={activeView}
           onSelectView={setActiveView}
           activeCategory={activeCategory}

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { Search, Bell, Scale, Sun, Moon, Scan, LogIn } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Search, Bell, Scale, Sun, Moon, LogIn } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
 
 export interface NavbarProps {
@@ -16,7 +16,6 @@ export default function Navbar({
   searchQuery = "",
   onSearchChange,
 }: NavbarProps): React.JSX.Element {
-  const navigate = useNavigate()
   const { isDarkMode, toggleTheme } = useTheme()
   const [notificationCount, setNotificationCount] = useState<number>(3)
 
@@ -27,30 +26,31 @@ export default function Navbar({
   }
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-14 min-h-14 px-4 lg:px-6 flex items-center justify-between sticky top-0 z-40 select-none transition-colors duration-200">
-      {/* Left: Brand Crest & Title */}
-      <div className="flex items-center gap-6">
-        <Link to="/" className="flex items-center gap-2.5 no-underline">
-          <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-blue-600 text-white flex items-center justify-center shadow-xs">
+    /* TOP NAV: Subtle lavender-gray in light (#FBFAFE), deep indigo-slate in dark (#1A1926) */
+    <header className="sticky top-0 z-40 bg-[#FBFAFE] dark:bg-[#1C1A2B] border-b border-[#E3E1F0] dark:border-[#2E2A44] h-16 px-4 lg:px-8 flex items-center justify-between transition-colors duration-200 select-none shadow-xs">
+      {/* Left: Brand with soft indigo accent (#7C6FE0) & text */}
+      <div className="flex items-center gap-6 lg:gap-8">
+        <Link to="/" className="flex items-center gap-2.5 no-underline group">
+          <div className="w-8 h-8 rounded-lg bg-[#7C6FE0] text-white flex items-center justify-center font-bold shadow-[0_2px_8px_rgba(124,111,224,0.3)] transition-transform group-hover:scale-105">
             <Scale className="w-4 h-4" />
           </div>
-          <span className="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">
+          <span className="font-bold text-base tracking-tight text-[#3A3A45] dark:text-[#ECE9F6]">
             Legal Metrology
           </span>
         </Link>
 
-        {/* Center: Horizontal Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-50 dark:bg-slate-800/80 p-1 rounded-lg border border-slate-200/80 dark:border-slate-700/80">
+        {/* Navigation Category Tabs */}
+        <nav className="hidden md:flex items-center gap-1">
           {tabs.map((tab) => {
             const isActive = activeTab === tab
             return (
               <button
                 key={tab}
                 onClick={() => onSelectTab(tab)}
-                className={`px-3.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs rounded-lg transition-all cursor-pointer ${
                   isActive
-                    ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white font-semibold shadow-2xs"
-                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
+                    ? "bg-[#EDEBFB] dark:bg-[#2A2544] text-[#7C6FE0] font-bold shadow-xs"
+                    : "text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#7C6FE0] hover:bg-[#F2F1F9] dark:hover:bg-[#232035] font-semibold"
                 }`}
               >
                 {tab}
@@ -60,67 +60,58 @@ export default function Navbar({
         </nav>
       </div>
 
-      {/* Right: Officer Live Scanner, Search, Dark Mode Switch, Notifications, Login & Profile Avatar */}
-      <div className="flex items-center gap-3">
-        {/* Officer Live Scanner Launcher */}
-        <button
-          onClick={() => navigate('/inspections/new')}
-          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
-          title="Open Officer OCR Packaging Scanner"
-        >
-          <Scan className="w-3.5 h-3.5" />
-          <span>Live Scanner</span>
-        </button>
-
-        {/* Search Bar */}
-        <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-48 lg:w-56">
-          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+      {/* Center: Pill-shaped search bar */}
+      <div className="flex-1 max-w-lg mx-4 hidden sm:block">
+        <form onSubmit={handleSearchSubmit} className="relative w-full">
+          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#6E6E80] dark:text-[#A29DB8] pointer-events-none" />
           <input
             type="text"
-            placeholder="Search GTIN, Docket..."
+            placeholder="Search compliance items, instruments, certificates, GTIN..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-400 dark:focus:ring-slate-500 focus:bg-white dark:focus:bg-slate-800 transition-colors"
+            className="w-full pl-11 pr-4 py-2 bg-[#F2F1F9] dark:bg-[#232035] border border-[#E3E1F0] dark:border-[#2E2A44] rounded-full text-xs text-[#3A3A45] dark:text-[#ECE9F6] placeholder-[#6E6E80] dark:placeholder-[#A29DB8] focus:outline-none focus:bg-[#FDFDFF] dark:focus:bg-[#1C1A2B] focus:border-[#7C6FE0] focus:ring-2 focus:ring-[#7C6FE0]/20 transition-all"
           />
         </form>
+      </div>
 
+      {/* Right: Notifications, Dark mode toggle, Sign in & User Profile */}
+      <div className="flex items-center gap-3">
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleTheme}
-          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+          className="p-2 text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#7C6FE0] hover:bg-[#F2F1F9] dark:hover:bg-[#232035] rounded-full transition-colors cursor-pointer"
           title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           aria-label="Toggle theme"
         >
-          {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+          {isDarkMode ? <Sun className="w-4 h-4 text-[#F5D08A]" /> : <Moon className="w-4 h-4" />}
         </button>
 
-        {/* Bell Notification */}
+        {/* Notification Bell Icon */}
         <button
           onClick={() => setNotificationCount(0)}
-          className="relative p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+          className="relative p-2 text-[#6E6E80] dark:text-[#A29DB8] hover:text-[#7C6FE0] hover:bg-[#F2F1F9] dark:hover:bg-[#232035] rounded-full transition-colors cursor-pointer"
           title="Notifications"
         >
           <Bell className="w-4 h-4" />
           {notificationCount > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500"></span>
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#7C6FE0]"></span>
           )}
         </button>
 
-        {/* Officer Login Button */}
+        {/* Sign In Secondary Button */}
         <Link
           to="/login"
-          className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-md transition-colors no-underline"
-          title="Officer Sign In"
+          className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 bg-[#FDFDFF] dark:bg-[#1C1A2B] border border-[#7C6FE0] hover:bg-[#EDEBFB] dark:hover:bg-[#2A2544] text-[#7C6FE0] text-xs font-semibold rounded-lg transition-colors no-underline shadow-xs"
         >
           <LogIn className="w-3.5 h-3.5" />
-          <span>Sign in</span>
+          <span>Sign In</span>
         </Link>
 
-        {/* Profile Chip */}
+        {/* Profile Avatar */}
         <div
           onClick={() => onSelectTab("Settings")}
-          className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors select-none"
-          title="Inspector S. Sharma"
+          className="w-8 h-8 rounded-full bg-[#7C6FE0] hover:bg-[#6C5FD1] text-white font-bold text-xs flex items-center justify-center cursor-pointer shadow-[0_2px_8px_rgba(124,111,224,0.3)] transition-all select-none"
+          title="Officer S. Sharma - Account & Settings"
         >
           SS
         </div>
