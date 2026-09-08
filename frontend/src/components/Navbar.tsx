@@ -1,12 +1,14 @@
-import React, { useState } from "react"
+﻿import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Moon, Sun, ChevronDown, User, Shield, LogOut, Plus } from "lucide-react"
+import { Search, Moon, Sun, ChevronDown, User, Shield, LogOut, Plus, Scale } from "lucide-react"
 import { useTheme } from "../context/ThemeContext"
+import { useAuth } from "../context/AuthContext"
 import { setSimulateNetworkError, getSimulateNetworkError } from "../services/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,8 +22,20 @@ import MagneticButton from "@/components/react-bits/MagneticButton"
 export default function Navbar(): React.JSX.Element {
   const navigate = useNavigate()
   const { isDarkMode, toggleTheme } = useTheme()
+  const { user, logout, hasRole } = useAuth()
   const [errorSimulated, setErrorSimulated] = useState<boolean>(getSimulateNetworkError())
   const [searchQuery, setSearchQuery] = useState<string>("")
+
+  const officerName = user?.name || "Inspector S. Sharma"
+  const officerZoneSubtitle = user?.zone
+    ? user.designation
+      ? `${user.zone} • ${user.designation}`
+      : `${user.zone} • Enforcement`
+    : "Zone 4 • Enforcement"
+  const officerInitials = user?.initials || "SS"
+  const officerId = user?.officerId || "LM-ZONE4-8821"
+  const jurisdictionLabel = user?.zone ? `${user.zone} Jurisdiction` : "Zone 4 Jurisdiction"
+  const officerRole = user?.role || "Inspector"
 
   const handleToggleError = (checked: boolean) => {
     setErrorSimulated(checked)
@@ -35,11 +49,18 @@ export default function Navbar(): React.JSX.Element {
     }
   }
 
+  const handleSignOut = async () => {
+    await logout()
+    navigate("/login")
+  }
+
   return (
     <header className="bg-card border-b border-border h-16 min-h-16 px-6 flex items-center justify-between transition-colors sticky top-0 z-40 shadow-xs">
       {/* Left: Logo & Title */}
       <Link to="/" className="flex items-center space-x-3 group text-foreground no-underline select-none">
-        <div className="text-primary text-xl font-bold transition-transform group-hover:scale-105">⚖️</div>
+        <div className="text-primary text-xl font-bold transition-transform group-hover:scale-105 flex items-center">
+          <Scale className="h-6 w-6 text-primary" />
+        </div>
         <div>
           <h1 className="text-sm font-bold tracking-tight text-foreground">
             Legal Metrology Inspection System
@@ -75,7 +96,7 @@ export default function Navbar(): React.JSX.Element {
           />
           <Label
             htmlFor="simulate-api-failure"
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden sm:inline"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors hidden sm:inline cursor-pointer"
           >
             Simulate API Failure
           </Label>
@@ -86,7 +107,7 @@ export default function Navbar(): React.JSX.Element {
           variant="outline"
           size="icon"
           onClick={toggleTheme}
-          className="h-8 w-8 rounded-md border-border text-foreground hover:bg-muted"
+          className="h-8 w-8 rounded-md border-border text-foreground hover:bg-muted cursor-pointer"
           title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
           aria-label="Toggle theme"
         >
@@ -99,34 +120,42 @@ export default function Navbar(): React.JSX.Element {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 px-2 py-1 h-auto hover:bg-muted rounded-lg"
+                className="flex items-center space-x-2 px-2 py-1 h-auto hover:bg-muted rounded-lg cursor-pointer"
               >
                 <div className="w-8 h-8 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-xs ring-1 ring-primary/20 select-none">
-                  SS
+                  {officerInitials}
                 </div>
                 <div className="hidden md:block text-left">
-                  <div className="text-xs font-semibold text-foreground leading-tight">Inspector S. Sharma</div>
-                  <div className="text-[10px] text-muted-foreground">Zone 4 • Enforcement</div>
+                  <div className="text-xs font-semibold text-foreground leading-tight">{officerName}</div>
+                  <div className="text-[10px] text-muted-foreground">{officerZoneSubtitle}</div>
                 </div>
                 <ChevronDown className="h-3 w-3 text-muted-foreground ml-1" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-60">
               <DropdownMenuLabel>
-                <div className="font-semibold text-xs">Inspector S. Sharma</div>
-                <div className="text-[10px] text-muted-foreground font-normal">Officer ID: LM-ZONE4-8821</div>
+                <div className="flex items-center justify-between">
+                  <div className="font-semibold text-xs text-foreground">{officerName}</div>
+                  <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider py-0 px-1.5 border-primary/40 text-primary bg-primary/5">
+                    {officerRole}
+                  </Badge>
+                </div>
+                <div className="text-[10px] text-muted-foreground font-normal mt-0.5">Officer ID: {officerId}</div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate("/history")}>
+              <DropdownMenuItem onClick={() => navigate("/history")} className="cursor-pointer">
                 <Shield className="mr-2 h-3.5 w-3.5 text-primary" />
-                <span>Zone 4 Jurisdiction</span>
+                <span>{jurisdictionLabel}</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/inspections/new")}>
+              <DropdownMenuItem onClick={() => navigate("/inspections/new")} className="cursor-pointer">
                 <User className="mr-2 h-3.5 w-3.5" />
                 <span>Active Audits</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
+              <DropdownMenuItem
+                onClick={handleSignOut}
+                className="text-destructive focus:text-destructive cursor-pointer"
+              >
                 <LogOut className="mr-2 h-3.5 w-3.5" />
                 <span>Sign Out</span>
               </DropdownMenuItem>
@@ -135,16 +164,18 @@ export default function Navbar(): React.JSX.Element {
         </div>
 
         {/* High-priority Action Button with Magnetic Micro-Interaction */}
-        <MagneticButton distance={0.15}>
-          <Button
-            size="sm"
-            onClick={() => navigate("/inspections/new")}
-            className="shadow-sm font-semibold text-xs px-3 py-1.5 h-8 gap-1.5"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>New Inspection</span>
-          </Button>
-        </MagneticButton>
+        {hasRole(["Inspector", "Admin"]) && (
+          <MagneticButton distance={0.15}>
+            <Button
+              size="sm"
+              onClick={() => navigate("/inspections/new")}
+              className="shadow-sm font-semibold text-xs px-3 py-1.5 h-8 gap-1.5 cursor-pointer"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>New Inspection</span>
+            </Button>
+          </MagneticButton>
+        )}
       </div>
     </header>
   )
