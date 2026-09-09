@@ -153,18 +153,28 @@ export default function LoginPage(): React.JSX.Element {
           </div>
 
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-100/90 md:flex">
-            <a href="#" className="transition hover:text-white">
+            <Link to="/how-it-works" className="transition hover:text-white">
               How it works
-            </a>
-            <a href="#" className="transition hover:text-white">
+            </Link>
+            <Link to="/faq" className="transition hover:text-white">
               FAQ
-            </a>
-            <a href="#" className="transition hover:text-white">
+            </Link>
+            <Link
+              to="/login"
+              onClick={() => {
+                const el = document.getElementById("officer-identifier")
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth" })
+                  el.focus()
+                }
+              }}
+              className="transition hover:text-white"
+            >
               For Officials
-            </a>
-            <a href="#" className="transition hover:text-white">
+            </Link>
+            <Link to="/for-organizations" className="transition hover:text-white">
               For Organizations
-            </a>
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">
