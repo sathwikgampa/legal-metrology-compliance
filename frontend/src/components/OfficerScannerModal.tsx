@@ -265,6 +265,27 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
   const currentSideSpec = currentProduct.sides[activeSide];
   const isCurrentSideCaptured = Boolean(capturedSides[activeSide]);
 
+  const getScannerImage = () => {
+    if (activeSide === 'BACK' && currentProduct.name.startsWith('Maggi')) {
+      return '/scanner/maggi_noodles_back.svg';
+    }
+
+    return currentProduct.image;
+  };
+
+  const getProductRotation = (side: "FRONT" | "BACK" | "LEFT" | "RIGHT") => {
+    switch (side) {
+      case 'BACK':
+        return 'perspective(1200px) rotateY(180deg)';
+      case 'LEFT':
+        return 'perspective(1200px) rotateY(-90deg)';
+      case 'RIGHT':
+        return 'perspective(1200px) rotateY(90deg)';
+      default:
+        return 'perspective(1200px) rotateY(0deg)';
+    }
+  };
+
   // Reset or initialize on open or product change
   useEffect(() => {
     if (!isOpen) return;
@@ -483,11 +504,17 @@ export default function OfficerScannerModal({ isOpen, onClose, onScanComplete }:
                 className="w-full h-full object-cover"
               />
             ) : (
-              <img
-                src={currentProduct.image}
-                alt="Scanner Viewfinder Feed"
-                className="w-full h-full object-contain bg-[#12111A] opacity-95 transition-all duration-300"
-              />
+              <div className="relative w-full h-full bg-[#12111A] overflow-hidden">
+                <img
+                  src={getScannerImage()}
+                  alt="Scanner Viewfinder Feed"
+                  className="w-full h-full object-contain opacity-95 transition-transform duration-700 ease-out"
+                  style={{ transform: getProductRotation(activeSide) }}
+                />
+                <div className="absolute inset-x-4 bottom-4 z-10 rounded-xl border border-[#7C6FE0]/50 bg-[#0F0E17]/80 px-3 py-2 text-center text-xs text-[#ECE9F6] shadow-lg backdrop-blur-sm">
+                  Rotate the physical product so the <span className="font-bold text-[#9589EC]">{currentSideSpec.sideLabel}</span> faces the camera.
+                </div>
+              </div>
             )}
 
             {gridVisible && (

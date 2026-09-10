@@ -1,0 +1,29 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop offset="0%" stop-color="#f7f0d8"/>
+      <stop offset="100%" stop-color="#e8d8a3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect x="120" y="90" width="960" height="720" rx="34" fill="#fdfdf9" stroke="#d4bb58" stroke-width="8"/>
+  <text x="600" y="170" text-anchor="middle" font-size="46" font-weight="700" fill="#2a2a2a" font-family="Arial, Helvetica, sans-serif">Maggi 2-Minute Masala Noodles</text>
+  <rect x="170" y="210" width="860" height="1.5" fill="#d0c07c"/>
+  <text x="170" y="270" font-size="32" font-weight="700" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">MRP: ₹14.00 (incl. of all taxes)</text>
+  <text x="170" y="325" font-size="30" font-weight="600" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">PKD: 15/10/23 • USE BY: 14/04/24</text>
+  <text x="170" y="380" font-size="30" font-weight="600" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">Manufactured by: Nestlé India Limited</text>
+  <text x="170" y="430" font-size="28" font-weight="500" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">M-5A, Connaught Circus, New Delhi - 110001</text>
+  <text x="170" y="480" font-size="28" font-weight="500" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">FSSAI Lic. No. 10012011000168</text>
+  <text x="170" y="535" font-size="28" font-weight="500" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">Consumer Care: wecare@in.nestle.com / 1800-103-1947</text>
+  <text x="170" y="590" font-size="28" font-weight="500" fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif">Country of Origin: India</text>
+  <text x="170" y="640" font-size="24" font-weight="700" fill="#8a5d2b" font-family="Arial, Helvetica, sans-serif">EAN-13 Barcode: 8 901058 000123</text>
+  <rect x="835" y="250" width="150" height="200" rx="14" fill="#ffffff" stroke="#c7b364" stroke-width="5"/>
+  <rect x="850" y="265" width="120" height="170" fill="#f5f5f5"/>
+  <g fill="#1d1d1d" font-family="Arial, Helvetica, sans-serif" font-size="16">
+    <text x="860" y="295">|||||||</text>
+    <text x="860" y="320">|||||||</text>
+    <text x="860" y="345">|||||||</text>
+    <text x="860" y="370">|||||||</text>
+    <text x="860" y="395">|||||||</text>
+  </g>
+</svg>

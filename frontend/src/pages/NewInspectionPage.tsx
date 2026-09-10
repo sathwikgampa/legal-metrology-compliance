@@ -54,12 +54,47 @@ export default function NewInspectionPage() {
     productName: string;
     brand: string;
     declaredNetQty: string;
+    sidesCaptured?: Record<string, any>;
   }) => {
     setProductName(scannedData.productName);
     setBrand(scannedData.brand);
     setDeclaredNetQty(scannedData.declaredNetQty);
 
-    // Convert scanned photo image URL into front & back slot previews
+    const sideToSlotMap: Record<string, string> = {
+      FRONT: 'front',
+      BACK: 'back',
+      LEFT: 'side',
+      RIGHT: 'close-up'
+    };
+
+    const capturedSides = scannedData.sidesCaptured || {};
+    const sideEntries = Object.values(capturedSides) as Array<{ side: string; photoUrl: string }>;
+
+    if (sideEntries.length > 0) {
+      Promise.all(
+        sideEntries.map(async (sideData) => {
+          const slotKey = sideToSlotMap[sideData.side] || 'front';
+          const res = await fetch(sideData.photoUrl);
+          const blob = await res.blob();
+          const file = new File([blob], `${slotKey}_panel.jpg`, { type: blob.type || 'image/jpeg' });
+
+          return [slotKey, { slotKey, file, previewUrl: sideData.photoUrl }];
+        })
+      )
+        .then((entries) => {
+          const nextSlots = Object.fromEntries(entries);
+          setUploadedSlots(nextSlots);
+          setScannedNotification(
+            `Captured ${sideEntries.length} package side(s) for "${scannedData.productName}". Uploaded evidence is now mapped to the package panels.`
+          );
+        })
+        .catch(() => {
+          setScannedNotification(`Scanned metadata captured for "${scannedData.productName}".`);
+        });
+      return;
+    }
+
+    // Fallback for legacy single-photo scans.
     fetch(scannedData.photoUrl)
       .then((res) => res.blob())
       .then((blob) => {

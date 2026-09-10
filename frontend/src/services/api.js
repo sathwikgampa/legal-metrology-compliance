@@ -103,7 +103,8 @@ export async function uploadImages(inspectionId, filesWithRoles) {
     role: item.role,
     name: item.file.name,
     url: item.previewUrl || URL.createObjectURL(item.file),
-    quality: { status: "ACCEPTABLE", score: 0.94 }
+    quality: { status: "ACCEPTABLE", score: 0.94 },
+    file: item.file
   }));
 
   record.uploaded_images = images;
@@ -128,22 +129,51 @@ export async function analyzeInspection(inspectionId) {
 
   // Attempt live integration with CV Service (8001) & Backend API (8000)
   try {
-    const defaultImgObj = record.uploaded_images[0];
-    let ocrPayload = null;
+    const uploadedImages = record.uploaded_images || [];
+    const ocrPayloads = [];
 
-    if (defaultImgObj && defaultImgObj.file) {
+    for (const uploadedImage of uploadedImages) {
+      if (!uploadedImage.file) continue;
+
       const formData = new FormData();
-      formData.append("file", defaultImgObj.file);
-      formData.append("product_id", inspectionId);
+      formData.append("file", uploadedImage.file);
+      formData.append("product_id", `${inspectionId}-${uploadedImage.image_id}`);
 
       const ocrRes = await fetch("http://localhost:8001/ocr/extract", {
         method: "POST",
         body: formData
       });
+
       if (ocrRes.ok) {
-        ocrPayload = await ocrRes.json();
+        const payload = await ocrRes.json();
+        ocrPayloads.push({
+          image_id: uploadedImage.image_id,
+          role: uploadedImage.role,
+          payload
+        });
       }
     }
+
+    const combinedExtractedText = ocrPayloads.flatMap(({ image_id, payload }) =>
+      (payload?.ocr_result?.extracted_text || []).map((item) => ({
+        ...item,
+        image_id
+      }))
+    );
+
+    const combinedOcrResult = {
+      extracted_text: combinedExtractedText,
+      image_count: combinedExtractedText.length,
+      sources: ocrPayloads.map(({ image_id, role, payload }) => ({
+        image_id,
+        role,
+        quality: payload?.image_quality || null
+      }))
+    };
+
+    const combinedConfidence = ocrPayloads.length > 0
+      ? ocrPayloads.reduce((sum, { payload }) => sum + (payload?.image_quality?.score || 0.95), 0) / ocrPayloads.length
+      : 0.95;
 
     // Call backend analyze route to evaluate rules & persist to SQLite DB
     const backendRes = await fetch("http://localhost:8000/analyze", {
@@ -151,8 +181,8 @@ export async function analyzeInspection(inspectionId) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         product_name: record.product.name,
-        ocr_result: ocrPayload ? ocrPayload.ocr_result : null,
-        confidence: ocrPayload?.image_quality?.score || 0.95,
+        ocr_result: combinedOcrResult,
+        confidence: combinedConfidence,
         product_profile: {
           product_name: record.product.name,
           manufacturer: record.product.brand,
@@ -181,7 +211,11 @@ export async function analyzeInspection(inspectionId) {
     return record;
   }
 
-  const defaultImgId = record.uploaded_images[0]?.image_id || "IMG001";
+  const uploadedImages = record.uploaded_images || [];
+  const fallbackImageIds = uploadedImages.length > 0
+    ? uploadedImages.map((img) => img.image_id)
+    : ["IMG001"];
+  const defaultImgId = fallbackImageIds[0];
 
   // Build realistic OCR tokens matching exact format
   record.ocr_results = [
